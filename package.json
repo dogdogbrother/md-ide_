@@ -1,18 +1,61 @@
 {
-  "name": "preact-demo",
+  "name": "md-ide",
   "private": true,
+  "main": "./main.js",
   "version": "0.0.0",
-  "type": "module",
+  "author": "senlin",
   "scripts": {
     "dev": "vite",
+    "_dev": "electron .",
     "build": "vite build",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "pack": "electron-builder --dir",
+    "dist": "electron-builder"
   },
   "dependencies": {
     "preact": "^10.11.2"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.4.0",
+    "electron": "^21.2.3",
+    "electron-build": "0.0.3",
+    "electron-builder": "^23.6.0",
     "vite": "^3.2.3"
+  },
+  "build": {
+    "appId": "vitePress.ElectronReact",
+    "productName": "vitePressIde",
+    "copyright": "Copyright © 2019 ${author}",
+    "directories": {
+      "buildResources": "assets"
+    },
+    "mac": {
+      "target": [
+        "dmg",
+        "zip"
+      ]
+    },
+    "dmg": {
+      "background": "assets/appdmg.png",
+      "icon": "assets/icon.icns",
+      "iconSize": 100,
+      "contents": [
+        {
+          "x": 380,
+          "y": 280,
+          "type": "link",
+          "path": "/Applications"
+        },
+        {
+          "x": 110,
+          "y": 280,
+          "type": "file"
+        }
+      ],
+      "window": {
+        "width": 500,
+        "height": 500
+      }
+    }
   }
 }

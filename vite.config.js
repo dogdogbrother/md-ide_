@@ -3,5 +3,14 @@ import preact from '@preact/preset-vite'
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [preact()]
+  base: './',
+  resolve: {
+    alias: {
+      '@': path.resolve(__dirname, 'src')
+    }
+  },
+  plugins: [preact()],
+  build: {
+    outDir: '_dist'
+  }
 })
