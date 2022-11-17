@@ -1,19 +1,26 @@
 {
   "name": "md-ide",
   "private": true,
-  "main": "./main.js",
+  "main": "./app/main.js",
   "version": "0.0.0",
   "author": "senlin",
   "scripts": {
-    "dev": "vite",
-    "_dev": "electron .",
-    "build": "vite build",
+    "_dev": "vite --port 5500",
+    "electron": "wait-on tcp:5500 && cross-env NODE_ENV=development electron .",
+    "dev": "concurrently -k \"npm run _dev\" \"npm run electron\"",
+    "_build": "vite build",
     "preview": "vite preview",
     "pack": "electron-builder --dir",
-    "dist": "electron-builder"
+    "build": "electron-builder",
+    "prebuild": "npm run _build",
+    "prepack": "npm run _build"
   },
   "dependencies": {
-    "preact": "^10.11.2"
+    "concurrently": "^7.5.0",
+    "cross-env": "^7.0.3",
+    "preact": "^10.11.2",
+    "wait-on": "^6.0.1",
+    "electron-is-dev": "^2.0.0"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.4.0",
@@ -24,11 +31,12 @@
   },
   "build": {
     "appId": "vitePress.ElectronReact",
-    "productName": "vitePressIde",
+    "productName": "markdown-ide",
     "copyright": "Copyright © 2019 ${author}",
     "directories": {
       "buildResources": "assets"
     },
+    "extends": null,
     "mac": {
       "target": [
         "dmg",
@@ -56,6 +64,14 @@
         "width": 500,
         "height": 500
       }
+    },
+    "win": {
+      "target": [
+        "msi",
+        "nsis"
+      ],
+      "icon": "assets/icon.ico",
+      "publisherName": "senlin"
     }
   }
 }
