@@ -1,5 +1,5 @@
 import { defineConfig } from 'vite'
-import preact from '@preact/preset-vite'
+import react from '@vitejs/plugin-react'
 import path from 'path'
 import { prismjsPlugin } from 'vite-plugin-prismjs'
 
@@ -11,7 +11,7 @@ export default defineConfig({
     }
   },
   plugins: [
-    preact(),
+    react(),
     prismjsPlugin({
       theme: "dark", //主题名称
       languages: 'all',

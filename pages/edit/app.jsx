@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'preact/hooks'
+import { useState, useRef, useEffect } from 'react'
 import Prism from 'prismjs'
 import './index.css'
 export function App() {
@@ -7,7 +7,7 @@ export function App() {
   const codeRef = useRef(null)
   useEffect(() => {
     if (codeRef && codeRef.current) {
-      // Prism.highlightElement(codeRef.current)
+      Prism.highlightElement(codeRef.current)
     }
   }, [content])
   function onInput(e) {
@@ -34,14 +34,15 @@ export function App() {
     }
   }
   return (
-    <div className='edit-wrap'>
+    <div className='edit-wrap no-scrollbar'>
       <textarea 
+        className='no-scrollbar'
         ref={textareaRef}
         onInput={onInput}
         onKeyDown={onEnterKey}
       />
-      <pre>
-        <code ref={codeRef} className="language-markdown line-numbers">
+      <pre className='no-scrollbar'>
+        <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
           {content}
         </code>
       </pre>
