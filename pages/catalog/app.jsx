@@ -1,19 +1,22 @@
 import './index.css'
-import { useEffect, useState } from 'react'
-const { ipcRenderer } = require('electron')
+import catalogStore from '@/store/catalog'
+import { observer } from 'mobx-react-lite'
 
-export function App() {
-  const [munes, setMenus] = useState([])
-  useEffect(() => {
-    ipcRenderer.send('getDocs')
-    // 因为监听的执行慢于主进程,所以还要去主动拉一些
-    ipcRenderer.on('viewDocs', (_event, info) => {
-      setMenus(JSON.parse(info))
-    })
-  }, [])
+function App() {
+  const onCheck = mune => () => {
+    catalogStore.setCurrentMenuName(mune)
+  } 
   return <div className='catalog-wrap'>
     <ul>
-      {munes.map(mune => (<li key={mune}>{mune}</li>))}
+      {catalogStore.menus.map(mune => (
+        <li 
+          key={mune} 
+          onClick={onCheck(mune)}
+          className={catalogStore.currentMenuName === mune ? 'active' : ''}
+        >{mune}</li>
+      ))}
     </ul>
   </div>
 }
+
+export default observer(App)

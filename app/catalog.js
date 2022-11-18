@@ -25,8 +25,18 @@ function createCatalog(window, _app) {
     const docs = _docs
       .filter(doc => doc.includes('.md'))
       .map(doc => doc.split('.md')[0])
-    console.log(docs);
     catalog.webContents.postMessage('viewDocs', JSON.stringify(docs))
+  })
+  ipcMain.on('getDoc', async (_e, docName) => {
+    const docContent = await fs.readFileSync(
+      path.resolve(__dirname, '../docs/' + docName + '.md'),
+      'utf8'
+    )
+    // 获取到目录点击后的文档内容,发送给编辑窗口
+    window.edit.webContents.postMessage('viewDoc', JSON.stringify({
+      doc: docContent,
+      docName
+    }))
   })
 }
 
