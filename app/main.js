@@ -1,10 +1,13 @@
 const {app, BrowserWindow } = require('electron')
 const path = require('path')
 const isDev = require('electron-is-dev')
+const { createEditor } = require('./editor')
+
+const windows = {}
 
 app.on('ready', async () => {
-  const win = new BrowserWindow({
-    width: 400,
+  windows.main = new BrowserWindow({
+    width: 800,
     height: 600,
     webPreferences: { 
       nodeIntegration: true,
@@ -12,8 +15,12 @@ app.on('ready', async () => {
     },
   })
   if (isDev) {
-    win.loadURL('http://localhost:5500')
+    windows.main.loadURL('http://localhost:5500')
   } else {
-    win.loadURL('file://' + path.resolve(__dirname, '../_dist/index.html'))
+    windows.main.loadURL('file://' + path.resolve(__dirname, '../_dist/index.html'))
   }
+  setTimeout(() => {
+    createEditor(windows, app)
+
+  }, 2000)
 })

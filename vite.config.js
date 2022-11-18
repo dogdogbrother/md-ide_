@@ -11,6 +11,12 @@ export default defineConfig({
   },
   plugins: [preact()],
   build: {
-    outDir: '_dist'
+    outDir: '_dist',
+    rollupOptions: {
+      input: {
+        main: path.resolve(__dirname, 'index.html'),
+        nested: path.resolve(__dirname, 'pages/edit/index.html')
+      }
+    }
   }
 })
