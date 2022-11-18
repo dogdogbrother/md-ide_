@@ -18,9 +18,11 @@
   "dependencies": {
     "concurrently": "^7.5.0",
     "cross-env": "^7.0.3",
+    "electron-is-dev": "^2.0.0",
     "preact": "^10.11.2",
-    "wait-on": "^6.0.1",
-    "electron-is-dev": "^2.0.0"
+    "prismjs": "^1.29.0",
+    "vite-plugin-prismjs": "0.0.8",
+    "wait-on": "^6.0.1"
   },
   "devDependencies": {
     "@preact/preset-vite": "^2.4.0",

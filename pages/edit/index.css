@@ -1,0 +1,40 @@
+.edit-wrap {
+  background-color: aqua;
+  width: 100vw;
+  height: 100vh;
+  overflow-y: auto;
+  position: relative;
+}
+textarea {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  top: 0;
+  outline: 2px solid transparent;
+  outline-offset: 2px;
+  border: none;
+  z-index: 50;
+  caret-color: #fff;
+  color: transparent;
+  background: transparent;
+  font-size: 16px !important;
+  padding: 29px 22px 25px 22px;
+  line-height: 24px !important;
+  font-family: 'Courier New', Courier, monospace !important;
+}
+pre {
+  width: 100vw;
+  min-height: 100vh;
+  margin: 0 !important;
+  padding-top: 22px !important;
+  border-radius: 0 !important;
+  line-height: 24px !important;
+  font-size: 16px !important;
+  border-radius: 0px;
+}
+code {
+  width: 100vw;
+  word-wrap: break-word;
+  white-space: pre-wrap;
+}
