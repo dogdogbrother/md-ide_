@@ -1,0 +1,25 @@
+.catalog-wrap {
+  height: 100vh;
+  padding: 10px;
+  box-sizing: border-box;
+  border-right: 1px solid rgba(204, 204, 204, 0.4);
+}
+li {
+  cursor: pointer;
+  margin-bottom: 5px;
+  padding: 7px 10px;
+  border-radius: 10px;
+  transition: 0.4s;
+  font-size: 14px;
+  background-color: rgba(238, 238, 238, 0);
+}
+li:last-child {
+  margin-bottom: 0;
+}
+li:hover {
+  background-color: rgba(238, 238, 238, 0.4);
+}
+li.active {
+  background-color: rgba(0, 0, 255, 0.7);
+  color: #fff;
+}

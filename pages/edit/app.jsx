@@ -34,18 +34,22 @@ export function App() {
     }
   }
   return (
-    <div className='edit-wrap no-scrollbar'>
-      <textarea 
-        className='no-scrollbar'
-        ref={textareaRef}
-        onInput={onInput}
-        onKeyDown={onEnterKey}
-      />
-      <pre className='no-scrollbar'>
-        <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
-          {content}
-        </code>
-      </pre>
-    </div>
+    <>
+      <div className='edit-wrap no-scrollbar'>
+        <textarea 
+          spellCheck="false"
+          className='no-scrollbar'
+          ref={textareaRef}
+          onInput={onInput}
+          onKeyDown={onEnterKey}
+        />
+        <pre className='no-scrollbar'>
+          <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
+            {content}
+          </code>
+        </pre>
+      </div>
+    </>
+    
   )
 }

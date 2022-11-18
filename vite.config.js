@@ -25,7 +25,8 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: path.resolve(__dirname, 'index.html'),
-        nested: path.resolve(__dirname, 'pages/edit/index.html')
+        edit: path.resolve(__dirname, 'pages/edit/index.html'),
+        catalog: path.resolve(__dirname, 'pages/catalog/index.html'),
       }
     }
   }
