@@ -1,6 +1,7 @@
 const { BrowserView, ipcMain } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
-
+const path = require('path')
+const fs = require('fs')
 function createEditor(window, _app) {
   window.edit = new BrowserView({
     webPreferences: { 
@@ -15,7 +16,10 @@ function createEditor(window, _app) {
   ipcMain.on('saveDoc', (_e, docInfo) => {
     const { doc, docName } = JSON.parse(docInfo)
     // 通过 docName 找到md文件,重写即可.
-    console.log(doc, docName);
+    fs.writeFileSync(path.resolve(
+      __dirname, 
+      '../docs/' + docName + '.md'
+    ), doc)
   })
 }
 

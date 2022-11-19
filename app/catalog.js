@@ -1,4 +1,4 @@
-const { BrowserView, ipcMain } = require('electron')
+const { BrowserView, ipcMain, Menu, MenuItem, BrowserWindow, Notification } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
 const path = require('path')
@@ -21,11 +21,7 @@ function createCatalog(window, _app) {
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
   catalog.webContents.openDevTools()
   ipcMain.on('getDocs', async () => {
-    const _docs = await fs.readdirSync(path.resolve(__dirname, '../docs'))
-    const docs = _docs
-      .filter(doc => doc.includes('.md'))
-      .map(doc => doc.split('.md')[0])
-    catalog.webContents.postMessage('viewDocs', JSON.stringify(docs))
+    getDocAndPostMsg(catalog)
   })
   ipcMain.on('getDoc', async (_e, docName) => {
     const docContent = await fs.readFileSync(
@@ -38,8 +34,43 @@ function createCatalog(window, _app) {
       docName
     }))
   })
+  ipcMain.on('addDoc', async (e, docName) => {
+    if (docName) {
+      await fs.writeFileSync(path.resolve(
+        __dirname,
+        '../docs/' + docName + '.md'
+      ), '# ' + docName)
+      const notification = new Notification({
+        body: '创建文档成功',
+        silent: true,
+        timeoutType: 'default',
+      })
+      notification.show()
+      // 创建成功了 获取全新的给渲染分支
+      getDocAndPostMsg(catalog)
+    } else {
+      const menu = new Menu()
+      menu.append(new MenuItem({
+        label: "新建markdown文档",
+        click: () => {
+          catalog.webContents.postMessage('addDoc', '')
+        }
+      }))
+      menu.popup(BrowserWindow.fromWebContents(e.sender))
+    }
+  })
+  ipcMain.on('delDoc', e => {
+
+  })
 }
 
+async function getDocAndPostMsg(window) {
+  const _docs = await fs.readdirSync(path.resolve(__dirname, '../docs'))
+  const docs = _docs
+    .filter(doc => doc.includes('.md'))
+    .map(doc => doc.split('.md')[0])
+    window.webContents.postMessage('viewDocs', JSON.stringify(docs))
+}
 module.exports = {
   createCatalog
 }

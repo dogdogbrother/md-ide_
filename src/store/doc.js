@@ -12,6 +12,7 @@ class DocStore {
       this.setDocName(docName)
     })
     setInterval(() => {
+      if (!this.doc || !this.docName) return
       ipcRenderer.send('saveDoc', JSON.stringify({
         doc: this.doc,
         docName: this.docName
