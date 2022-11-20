@@ -1,9 +1,9 @@
-const { BrowserView, ipcMain, Menu, MenuItem, BrowserWindow, Notification } = require('electron')
+const { BrowserView, ipcMain, Menu, MenuItem, BrowserWindow, Notification, shell } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
-const path = require('path')
+const { setBrowserView } = require('./util/setBrowserView')
 
-function createCatalog(window, _app) {
+async function createCatalog(window, md_file) {
   window.catalog = new BrowserView({
     webPreferences: { 
       nodeIntegration: true,
@@ -11,23 +11,24 @@ function createCatalog(window, _app) {
     }
   })
   const { catalog } = window
-  window.main.setBrowserView(catalog)
+  setBrowserView(window.main, catalog)
   catalog.setBounds({ 
     x: 0, 
     y: 28, 
     width: 200, 
-    height: 600 
+    height: 572 
+  })
+  catalog.setAutoResize({
+    height: true,
+    vertical: true
   })
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
-  catalog.webContents.openDevTools()
+  // catalog.webContents.openDevTools()
   ipcMain.on('getDocs', async () => {
-    getDocAndPostMsg(catalog)
+    getDocAndPostMsg(catalog, md_file)
   })
   ipcMain.on('getDoc', async (_e, docName) => {
-    const docContent = await fs.readFileSync(
-      path.resolve(__dirname, '../docs/' + docName + '.md'),
-      'utf8'
-    )
+    const docContent = await fs.readFileSync(md_file + '/' + docName + '.md', 'utf8')
     // 获取到目录点击后的文档内容,发送给编辑窗口
     window.edit.webContents.postMessage('viewDoc', JSON.stringify({
       doc: docContent,
@@ -36,10 +37,7 @@ function createCatalog(window, _app) {
   })
   ipcMain.on('addDoc', async (e, docName) => {
     if (docName) {
-      await fs.writeFileSync(path.resolve(
-        __dirname,
-        '../docs/' + docName + '.md'
-      ), '# ' + docName)
+      await fs.writeFileSync(md_file + '/' + docName + '.md', '# ' + docName)
       const notification = new Notification({
         body: '创建文档成功',
         silent: true,
@@ -47,13 +45,20 @@ function createCatalog(window, _app) {
       })
       notification.show()
       // 创建成功了 获取全新的给渲染分支
-      getDocAndPostMsg(catalog)
+      getDocAndPostMsg(catalog, md_file)
     } else {
       const menu = new Menu()
       menu.append(new MenuItem({
         label: "新建markdown文档",
         click: () => {
           catalog.webContents.postMessage('addDoc', '')
+        }
+      }))
+      menu.append(new MenuItem({
+        label: "打开所在目录",
+        click: () => {
+          console.log(md_file);
+          shell.openPath(md_file)
         }
       }))
       menu.popup(BrowserWindow.fromWebContents(e.sender))
@@ -64,8 +69,8 @@ function createCatalog(window, _app) {
   })
 }
 
-async function getDocAndPostMsg(window) {
-  const _docs = await fs.readdirSync(path.resolve(__dirname, '../docs'))
+async function getDocAndPostMsg(window, md_file) {
+  const _docs = await fs.readdirSync(md_file)
   const docs = _docs
     .filter(doc => doc.includes('.md'))
     .map(doc => doc.split('.md')[0])

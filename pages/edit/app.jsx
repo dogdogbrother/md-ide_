@@ -12,7 +12,6 @@ function App() {
       Prism.highlightElement(codeRef.current)
     }
   }, [docStore.doc])
-
   // 开始定时器,每10s把内容回传给主进程
   function onInput(e) {
     docStore.setDoc(e.target.value)
@@ -39,16 +38,17 @@ function App() {
   }
   return (
     <>
-      <div className='edit-wrap no-scrollbar'>
-        <textarea 
-          spellCheck="false"
-          className='no-scrollbar'
-          value={docStore.doc || undefined}
-          ref={textareaRef}
-          onInput={onInput}
-          onKeyDown={onEnterKey}
-        />
+      <div className='edit-wrap'>
         <pre className='no-scrollbar'>
+          <textarea 
+            autoFocus
+            spellCheck="false"
+            className='no-scrollbar'
+            value={docStore.doc || undefined}
+            ref={textareaRef}
+            onInput={onInput}
+            onKeyDown={onEnterKey}
+          />
           <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
             {docStore.doc}
           </code>
