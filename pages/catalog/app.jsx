@@ -2,6 +2,7 @@ import './index.css'
 import catalogStore from '@/store/catalog'
 import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
+import { MdiLanguageMarkdown } from '../../src/assets/svg'
 
 function App() {
   const [isRepeat, setIsRepeat] = useState(false)
@@ -40,7 +41,10 @@ function App() {
           key={mune} 
           onClick={onCheck(mune)}
           className={catalogStore.currentMenuName === mune ? 'active' : ''}
-        >{mune}</li>
+        >
+          <MdiLanguageMarkdown />
+          {mune}
+        </li>
       ))}
       {
         catalogStore.addState 

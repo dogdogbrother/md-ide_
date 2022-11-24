@@ -8,11 +8,27 @@ function App() {
   const textareaRef = useRef(null)
   const codeRef = useRef(null)
   useEffect(() => {
+    function handleContextMenu(e) {
+      e.preventDefault()
+      docStore.createEditMenu()
+    }
+    window.addEventListener('contextmenu', handleContextMenu)
+  }, [])
+  useEffect(() => {
     if (codeRef && codeRef.current) {
       Prism.highlightElement(codeRef.current)
     }
   }, [docStore.doc])
-  // 开始定时器,每10s把内容回传给主进程
+  // 插入内容有值时,插入
+  useEffect(() => {
+    if (!docStore.insertValue) return
+    const value = textareaRef.current.value || ''
+    const start = textareaRef.current.selectionStart || 0
+    textareaRef.current.value = value.substring(0, start) + docStore.insertValue + value.substring(start)
+    docStore.setDoc(textareaRef.current.value)
+    docStore.setInsertValue('')
+  }, [docStore.insertValue])
+  
   function onInput(e) {
     docStore.setDoc(e.target.value)
   }
