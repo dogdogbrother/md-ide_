@@ -55,7 +55,7 @@ tags: ''
   }
   // 通知主程序 建议编辑器的菜单
   createEditMenu() {
-    ipcRenderer.send('createEditMenu')
+    ipcRenderer.send('createEditMenu', this.docName)
   }
   setInsertValue(value) {
     this.insertValue = value

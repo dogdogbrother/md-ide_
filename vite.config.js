@@ -27,6 +27,7 @@ export default defineConfig({
         main: path.resolve(__dirname, 'index.html'),
         edit: path.resolve(__dirname, 'pages/edit/index.html'),
         catalog: path.resolve(__dirname, 'pages/catalog/index.html'),
+        preview: path.resolve(__dirname, 'pages/preview/index.html'),
       }
     }
   }

@@ -4,6 +4,7 @@ const path = require('path')
 const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
+const { createPreview } = require('./preview')
 
 function createEditor(window, md_file) {
   window.edit = new BrowserView({
@@ -21,7 +22,7 @@ function createEditor(window, md_file) {
     vertical: true
   })
   loadUrl(edit.webContents, '/pages/edit/index.html')
-  window.edit.webContents.openDevTools()
+  // window.edit.webContents.openDevTools()
   
   ipcMain.on('saveDoc', (_e, docInfo) => {
     const { doc, docName } = JSON.parse(docInfo)
@@ -29,7 +30,7 @@ function createEditor(window, md_file) {
     fs.writeFileSync(md_file + '/' + docName + '.md', doc)
   })
   // 在编辑器右键创建菜单
-  ipcMain.on('createEditMenu', e => {
+  ipcMain.on('createEditMenu', (e, docName) => {
     createMenu(e, [
       {
         label: '插入头部描述',
@@ -47,6 +48,13 @@ function createEditor(window, md_file) {
         label: '插入css代码',
         click() {
           edit.webContents.postMessage('insert', 'css')
+        }
+      },
+      { type: 'separator' },
+      {
+        label: '预览MarkDown',
+        click() {
+          createPreview(docName, md_file)
         }
       },
     ])
