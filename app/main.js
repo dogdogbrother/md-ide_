@@ -21,8 +21,8 @@ app.on('ready', async () => {
 
 function createMainWindow(windows, md_file) {
   windows.main = new BrowserWindow({
-    width: 800,
-    height: 600,
+    width: 1280,
+    height: 900,
     show: false,
     webPreferences: { 
       nodeIntegration: true,

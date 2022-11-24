@@ -29,7 +29,8 @@ class CatalogStore {
     ipcRenderer.send('addDoc', docName)
   }
   eidtDoc(docName) {
-
+    // 暂时只提供删除,后续有重命名
+    ipcRenderer.send('eidtDoc', docName)
   }
   setAddState(state) {
     this.addState = state

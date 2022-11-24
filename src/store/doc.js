@@ -11,6 +11,13 @@ class DocStore {
       this.setDoc(doc)
       this.setDocName(docName)
     })
+    // 左侧删除了菜单,这里检查下,是不是当前显示的  是的话就清空
+    ipcRenderer.on('isClearView', (_event, docName) => {
+      if (this.docName === docName) {
+        this.setDoc(null)
+        this.setDocName(null)
+      }
+    })
     setInterval(() => {
       if (!this.doc || !this.docName) return
       ipcRenderer.send('saveDoc', JSON.stringify({
@@ -24,6 +31,10 @@ class DocStore {
   }
   setDocName(docName) {
     this.docName = docName
+  }
+  // 通知主程序 建议编辑器的菜单
+  createEditMenu() {
+    ipcRenderer.send('createEditMenu')
   }
 }
 

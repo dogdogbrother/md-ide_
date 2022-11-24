@@ -43,7 +43,6 @@ async function showChoice(window, app, userDataPath, windows) {
       md_file: _userData + '/docs'
     }
     await fs.writeFileSync(userDataPath, JSON.stringify(json))
-    console.log(json.md_file + '/第一个文档.md');
     await fs.mkdirSync(json.md_file)
     await fs.writeFileSync(json.md_file + '/第一个文档.md', '# 第一个文档')
     createMainWindow(windows, json.md_file)

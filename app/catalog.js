@@ -1,7 +1,8 @@
-const { BrowserView, ipcMain, Menu, MenuItem, BrowserWindow, Notification, shell } = require('electron')
+const { BrowserView, ipcMain, Menu, MenuItem, BrowserWindow, Notification, shell, dialog } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
+const { createMenu } = require('./util/createMenu')
 
 async function createCatalog(window, md_file) {
   window.catalog = new BrowserView({
@@ -15,15 +16,15 @@ async function createCatalog(window, md_file) {
   catalog.setBounds({ 
     x: 0, 
     y: 28, 
-    width: 200, 
-    height: 572 
+    width: 240, 
+    height: 900 
   })
   catalog.setAutoResize({
     height: true,
     vertical: true
   })
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
-  // catalog.webContents.openDevTools()
+  catalog.webContents.openDevTools()
   ipcMain.on('getDocs', async () => {
     getDocAndPostMsg(catalog, md_file)
   })
@@ -47,22 +48,47 @@ async function createCatalog(window, md_file) {
       // 创建成功了 获取全新的给渲染分支
       getDocAndPostMsg(catalog, md_file)
     } else {
-      const menu = new Menu()
-      menu.append(new MenuItem({
-        label: "新建markdown文档",
-        click: () => {
-          catalog.webContents.postMessage('addDoc', '')
+      createMenu(e, [
+        {
+          label: "新建markdown文档",
+          click: () => {
+            catalog.webContents.postMessage('addDoc', '')
+          }
+        },
+        {
+          label: "打开所在目录",
+          click: () => {
+            shell.openPath(md_file)
+          }
         }
-      }))
-      menu.append(new MenuItem({
-        label: "打开所在目录",
+      ])
+    }
+  })
+  ipcMain.on('eidtDoc', async (e, docName) => {
+    createMenu(e, [
+      {
+        label: "删除此文档",
+        click:  () => {
+          const buttonInteger = dialog.showMessageBoxSync(window.main, {
+            message: `要确认删除${docName}文档吗?`,
+            detail: '删除就恢复不了哦',
+            buttons: ['确认删除', '取消'],
+            cancelId: 1
+          })
+          if (buttonInteger === 0) {
+            fs.unlinkSync(md_file + '/' + docName + '.md')
+            getDocAndPostMsg(catalog, md_file)
+            window.edit.webContents.postMessage('isClearView', docName)
+          }
+        }
+      },
+      {
+        label: "打开文件所在目录",
         click: () => {
-          console.log(md_file);
           shell.openPath(md_file)
         }
-      }))
-      menu.popup(BrowserWindow.fromWebContents(e.sender))
-    }
+      }
+    ])
   })
   ipcMain.on('delDoc', e => {
 
@@ -74,8 +100,9 @@ async function getDocAndPostMsg(window, md_file) {
   const docs = _docs
     .filter(doc => doc.includes('.md'))
     .map(doc => doc.split('.md')[0])
-    window.webContents.postMessage('viewDocs', JSON.stringify(docs))
+  window.webContents.postMessage('viewDocs', JSON.stringify(docs))
 }
+
 module.exports = {
   createCatalog
 }

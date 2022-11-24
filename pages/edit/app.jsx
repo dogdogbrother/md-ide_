@@ -8,6 +8,13 @@ function App() {
   const textareaRef = useRef(null)
   const codeRef = useRef(null)
   useEffect(() => {
+    function handleContextMenu(e) {
+      e.preventDefault()
+      docStore.createEditMenu()
+    }
+    window.addEventListener('contextmenu', handleContextMenu)
+  }, [])
+  useEffect(() => {
     if (codeRef && codeRef.current) {
       Prism.highlightElement(codeRef.current)
     }
