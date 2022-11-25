@@ -1,0 +1,10 @@
+pre code {
+  padding: 10px 20px;
+  background-color: black;
+  display: inline-block;
+  color: #fff;
+  font-size: 18px;
+}
+:not(pre) > code {
+  color: blueviolet;
+}

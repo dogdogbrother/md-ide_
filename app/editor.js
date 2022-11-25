@@ -22,7 +22,7 @@ function createEditor(window, md_file) {
     vertical: true
   })
   loadUrl(edit.webContents, '/pages/edit/index.html')
-  // window.edit.webContents.openDevTools()
+  window.edit.webContents.openDevTools()
   
   ipcMain.on('saveDoc', (_e, docInfo) => {
     const { doc, docName } = JSON.parse(docInfo)

@@ -9,7 +9,9 @@ function createPreview(docName, md_file) {
     show: false,
     webPreferences: { 
       nodeIntegration: true,
-      contextIsolation: false
+      contextIsolation: false,
+      webSecurity: false,
+      allowRunningInsecureContent: true
     },
   })
   loadUrl(window, '/pages/preview/index.html')
