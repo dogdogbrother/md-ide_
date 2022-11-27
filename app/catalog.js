@@ -25,11 +25,11 @@ async function createCatalog(window, md_file) {
   })
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
   catalog.webContents.openDevTools()
-  ipcMain.on('getDocs', async () => {
+  ipcMain.on('getDocs', () => {
     getDocAndPostMsg(catalog, md_file)
   })
-  ipcMain.on('getDoc', async (_e, docName) => {
-    const docContent = await fs.readFileSync(md_file + '/' + docName + '.md', 'utf8')
+  ipcMain.on('getDoc', (_e, docName) => {
+    const docContent = fs.readFileSync(md_file + '/' + docName + '.md', 'utf8')
     // 获取到目录点击后的文档内容,发送给编辑窗口
     window.edit.webContents.postMessage('viewDoc', JSON.stringify({
       doc: docContent,
@@ -55,6 +55,13 @@ async function createCatalog(window, md_file) {
             catalog.webContents.postMessage('addDoc', '')
           }
         },
+        {
+          label: "新建目录",
+          click: () => {
+
+          }
+        },
+        { type: 'separator' },
         {
           label: "打开所在目录",
           click: () => {
@@ -95,14 +102,36 @@ async function createCatalog(window, md_file) {
   })
 }
 
-async function getDocAndPostMsg(window, md_file) {
-  const _docs = await fs.readdirSync(md_file)
-  const docs = _docs
-    .filter(doc => doc.includes('.md'))
-    .map(doc => doc.split('.md')[0])
-  window.webContents.postMessage('viewDocs', JSON.stringify(docs))
+function getDocAndPostMsg(window, md_file) {
+  const files = fs.readdirSync(md_file)
+  const dcos = files.filter(file => file.includes('.md')).map(getDocFn)
+  // 暂时判定 没有 .md 的都是文件夹
+  const _dir = files.filter(file => !file.includes('.md'))
+  const dir = []
+  _dir.forEach(item => {
+    const fullPath = md_file + '/' + item
+    const stats = fs.statSync(fullPath)
+    if (!stats.isFile()) {
+      const files = fs.readdirSync(fullPath)
+      console.log(files);
+      const dcos = files.filter(file => file.includes('.md')).map(getDocFn)
+      dir.push({
+        type: 'dir',
+        name: item,
+        children: dcos
+      })
+    }
+  })
+  window.webContents.postMessage('viewDocs', JSON.stringify([...dir, ...dcos]))
 }
 
+// 最终生成文档对象的回调方法
+const getDocFn = file => {
+  return {
+    type: 'md',
+    name: file.split('.md')[0]
+  }
+}
 module.exports = {
   createCatalog
 }

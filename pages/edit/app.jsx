@@ -2,6 +2,7 @@ import { useRef, useEffect } from 'react'
 import Prism from 'prismjs'
 import docStore from '@/store/doc'
 import { observer } from 'mobx-react-lite'
+import { Empty } from '../../src/assets/svg'
 import './index.css'
 
 function App() {
@@ -59,22 +60,33 @@ function App() {
   }
   return (
     <>
-      <div className='edit-wrap'>
-        <pre className='no-scrollbar'>
-          <textarea 
-            autoFocus
-            spellCheck="false"
-            className='no-scrollbar'
-            value={docStore.doc || undefined}
-            ref={textareaRef}
-            onInput={onInput}
-            onKeyDown={onEnterKey}
-          />
-          <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
-            {docStore.doc}
-          </code>
-        </pre>
-      </div>
+      {
+        docStore.docName
+        ?
+        <div className='edit-wrap'>
+          <pre className='no-scrollbar'>
+            <textarea 
+              autoFocus
+              spellCheck="false"
+              className='no-scrollbar'
+              value={docStore.doc || undefined}
+              ref={textareaRef}
+              onInput={onInput}
+              onKeyDown={onEnterKey}
+            />
+            <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
+              {docStore.doc}
+            </code>
+          </pre>
+        </div>
+        : 
+        <div className='empty-wrap'>
+          <div>
+            <Empty />
+            <p>可以右键插入代码片段/预览文章哦</p>
+          </div>
+        </div>
+      }
     </>
   )
 }
