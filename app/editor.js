@@ -54,11 +54,12 @@ function createEditor(window, md_file) {
       {
         label: '预览MarkDown',
         click() {
-          createPreview(docName, md_file)
+          createPreview(window, docName, md_file)
         }
       },
     ])
   })
+  
 }
 
 module.exports = {

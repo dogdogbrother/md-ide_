@@ -9,13 +9,12 @@ function App() {
   useEffect(() => {
     function handleContextMenu(e) {
       e.preventDefault()
-      const { localName, innerHTML } = e.target
+      const { localName, innerText, dataset } = e.target
       // localName 可能是li ul 和 div
       if (localName === 'ul' || localName === 'div') {
         return catalogStore.addDoc()
       }
-      return catalogStore.eidtDoc(innerHTML)
-      // ipcRenderer.send('menuContextMenu')
+      return catalogStore.eidtDoc(innerText || dataset.name)
     }
     window.addEventListener('contextmenu', handleContextMenu)
   }, [])
@@ -42,7 +41,7 @@ function App() {
           onClick={onCheck(mune)}
           className={catalogStore.currentMenuName === mune ? 'active' : ''}
         >
-          <MdiLanguageMarkdown />
+          <MdiLanguageMarkdown data-name={mune}/>
           {mune}
         </li>
       ))}

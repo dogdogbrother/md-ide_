@@ -7,6 +7,7 @@ import { useState, useEffect } from 'react'
 import matter from 'gray-matter'
 import MarkDown from 'markdown-to-jsx'
 const { ipcRenderer } = require('electron')
+import Prism from 'prismjs'
 
 ReactDOM.createRoot(document.getElementById('app')).render(
   <App />
@@ -19,12 +20,30 @@ function App() {
       setContent(content)
     })
   }, [])
+  function Code({className, children}) {
+    if (className) {
+      const newLanguage = className.replace("lang-", "language-");
+      const type = newLanguage.split('language-')[1]
+      return <code 
+        className={className}
+        dangerouslySetInnerHTML={{
+          __html: Prism.highlight(children, Prism.languages[type], type)
+        }}
+      ></code>
+    }
+    return <code>{children}</code>
+  }
   return <div className='paper'>
     <MarkDown
       children={content}
       options={{ 
         forceBlock: true, 
         wrapper: 'article',
+        overrides: {
+          code: {
+            component: Code
+          }
+        }
       }}
     ></MarkDown>
   </div>

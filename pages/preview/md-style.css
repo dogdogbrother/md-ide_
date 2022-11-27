@@ -4,6 +4,7 @@ pre code {
   display: inline-block;
   color: #fff;
   font-size: 18px;
+  min-width: 440px;
 }
 :not(pre) > code {
   color: blueviolet;

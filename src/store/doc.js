@@ -5,6 +5,7 @@ class DocStore {
   doc = null  // 当前的文档内容
   docName = null  // 文档文件名
   insertValue = null  // 文档插入的内容
+  timer = null
   constructor() {
     makeAutoObservable(this)
     ipcRenderer.on('viewDoc', (_event, docInfo) => {
@@ -38,17 +39,14 @@ tags: ''
 \`\`\``)
       }
     })
-    
-    setInterval(() => {
-      if (!this.doc || !this.docName) return
-      ipcRenderer.send('saveDoc', JSON.stringify({
-        doc: this.doc,
-        docName: this.docName
-      }))
-    }, 5000)
+    this.setInterval()
   }
   setDoc(doc) {
     this.doc = doc
+  }
+  saveDoc() {
+    clearInterval(this.timer)
+    this.setInterval()
   }
   setDocName(docName) {
     this.docName = docName
@@ -59,6 +57,20 @@ tags: ''
   }
   setInsertValue(value) {
     this.insertValue = value
+  }
+  setInterval() {
+    if (!this.doc || !this.docName) return
+    ipcRenderer.send('saveDoc', JSON.stringify({
+      doc: this.doc,
+      docName: this.docName
+    }))
+    this.timer = setInterval(() => {
+      if (!this.doc || !this.docName) return
+      ipcRenderer.send('saveDoc', JSON.stringify({
+        doc: this.doc,
+        docName: this.docName
+      }))
+    }, 5000)
   }
 }
 

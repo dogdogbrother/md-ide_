@@ -33,20 +33,25 @@ function App() {
     docStore.setDoc(e.target.value)
   }
   function onEnterKey(e) {
+    // ctrl + s 保存当前
+    if ((e.metaKey || e.ctrlKey) && e.keyCode === 83) {
+      docStore.saveDoc()
+      return e.preventDefault()
+    }
     const pointStart = e.target.selectionStart
     const pointEnd = e.target.selectionEnd
     const textLength = e.target.value.length
     const content = e.target.value
     if (e.key === 'Tab') {
       if (textLength === pointStart) {
-        const newContent = content + '  '
+        const newContent = content + ''
         docStore.setDoc(newContent)
         textareaRef.current.value = newContent
         return e.preventDefault()
       } else {
         const newContent = content.slice(0, pointStart) + '  ' + content.slice(pointEnd)
-        e.target.setSelectionRange(pointStart + 2, pointStart + 2)
         textareaRef.current.value = newContent
+        e.target.setSelectionRange(pointStart + 2, pointStart + 2)
         docStore.setDoc(newContent)
         return e.preventDefault()
       }
