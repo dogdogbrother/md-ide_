@@ -28,17 +28,20 @@ async function createCatalog(window, md_file) {
   ipcMain.on('getDocs', () => {
     getDocAndPostMsg(catalog, md_file)
   })
-  ipcMain.on('getDoc', (_e, docName) => {
-    const docContent = fs.readFileSync(md_file + '/' + docName + '.md', 'utf8')
-    // 获取到目录点击后的文档内容,发送给编辑窗口
+  ipcMain.on('getDoc', (_e, docInfo) => {
+    const { docName, dirName } = JSON.parse(docInfo)
+    const fullPath = md_file + '/' + (dirName ? dirName + '/' : '') + docName + '.md'
+    const docContent = fs.readFileSync(fullPath, 'utf8')
+    // // 获取到目录点击后的文档内容,发送给编辑窗口
     window.edit.webContents.postMessage('viewDoc', JSON.stringify({
       doc: docContent,
-      docName
+      docName,
+      dirName
     }))
   })
-  ipcMain.on('addDoc', async (e, docName) => {
+  ipcMain.on('addDoc', (e, docName) => {
     if (docName) {
-      await fs.writeFileSync(md_file + '/' + docName + '.md', '# ' + docName)
+      fs.writeFileSync(md_file + '/' + docName + '.md', '# ' + docName)
       const notification = new Notification({
         body: '创建文档成功',
         silent: true,
@@ -58,7 +61,7 @@ async function createCatalog(window, md_file) {
         {
           label: "新建目录",
           click: () => {
-
+            catalog.webContents.postMessage('addDir', '')
           }
         },
         { type: 'separator' },
@@ -70,6 +73,16 @@ async function createCatalog(window, md_file) {
         }
       ])
     }
+  })
+  ipcMain.on('addDir', (_e, dirName) => {
+    fs.mkdirSync(md_file + '/' + dirName)
+    const notification = new Notification({
+      body: '创建文件夹成功',
+      silent: true,
+      timeoutType: 'default',
+    })
+    notification.show()
+    getDocAndPostMsg(catalog, md_file)
   })
   ipcMain.on('eidtDoc', async (e, docName) => {
     createMenu(e, [
@@ -113,7 +126,6 @@ function getDocAndPostMsg(window, md_file) {
     const stats = fs.statSync(fullPath)
     if (!stats.isFile()) {
       const files = fs.readdirSync(fullPath)
-      console.log(files);
       const dcos = files.filter(file => file.includes('.md')).map(getDocFn)
       dir.push({
         type: 'dir',

@@ -4,14 +4,16 @@ const { ipcRenderer } = require('electron')
 class DocStore {
   doc = null  // 当前的文档内容
   docName = null  // 文档文件名
+  dirName = null
   insertValue = null  // 文档插入的内容
   timer = null
   constructor() {
     makeAutoObservable(this)
     ipcRenderer.on('viewDoc', (_event, docInfo) => {
-      const { doc, docName } = JSON.parse(docInfo)
+      const { doc, docName, dirName } = JSON.parse(docInfo)
       this.setDoc(doc)
       this.setDocName(docName)
+      this.setDirName(dirName)
     })
     // 左侧删除了菜单,这里检查下,是不是当前显示的  是的话就清空
     ipcRenderer.on('isClearView', (_event, docName) => {
@@ -53,7 +55,10 @@ tags: ''
   }
   // 通知主程序 建议编辑器的菜单
   createEditMenu() {
-    ipcRenderer.send('createEditMenu', this.docName)
+    ipcRenderer.send(
+      'createEditMenu', 
+      JSON.stringify({ docName: this.docName, dirName: this.dirName })
+    )
   }
   setInsertValue(value) {
     this.insertValue = value
@@ -71,6 +76,9 @@ tags: ''
         docName: this.docName
       }))
     }, 5000)
+  }
+  setDirName(dirName) {
+    this.dirName = dirName
   }
 }
 

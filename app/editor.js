@@ -30,7 +30,8 @@ function createEditor(window, md_file) {
     fs.writeFileSync(md_file + '/' + docName + '.md', doc)
   })
   // 在编辑器右键创建菜单
-  ipcMain.on('createEditMenu', (e, docName) => {
+  ipcMain.on('createEditMenu', (e, info ) => {
+    const { docName, dirName } = JSON.parse(info)
     createMenu(e, [
       {
         label: '插入头部描述',
@@ -54,7 +55,7 @@ function createEditor(window, md_file) {
       {
         label: '预览MarkDown',
         click() {
-          createPreview(window, docName, md_file)
+          createPreview(window, docName, md_file, dirName)
         }
       },
     ])

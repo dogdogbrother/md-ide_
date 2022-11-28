@@ -4,12 +4,15 @@ const fs = require('fs')
 const wathch = {
   fs: null
 }
-function createPreview(window, docName, md_file) {
+function createPreview(window, docName, md_file, dirName) {
   if (window.preview) {
+    // 如果有预览窗口了,设置 title
     window.preview.setTitle(docName)
+    // 关闭旧的文件观察
     wathch.fs.close()
+    // 开启新的文件观察
     watchFs()
-    window.preview.setFocusable(true)
+    // 把新窗口设置最上级 然后再取消
     window.preview.setAlwaysOnTop(true)
     setTimeout(() => {
       window.preview.setAlwaysOnTop(false)
@@ -43,15 +46,16 @@ function createPreview(window, docName, md_file) {
     window.preview = null
   })
   function watchFs() {
+    const fullPath = md_file + '/' + (dirName ? dirName + '/' : '') + docName + '.md'
     // 这里有重命名的情况 暂时不考虑
-    wathch.fs = fs.watch(md_file + '/' + docName + '.md', (eventType, filename) => {
+    wathch.fs = fs.watch(fullPath, (eventType, filename) => {
       if (eventType === 'rename') {
         return
       }
-      const doc = fs.readFileSync(md_file + '/' + filename, 'utf-8')
+      const doc = fs.readFileSync(fullPath, 'utf-8')
       window.preview.webContents.postMessage('viewDocText', doc)
     })
-    const doc = fs.readFileSync(md_file + '/' + docName + '.md', 'utf-8')
+    const doc = fs.readFileSync(fullPath, 'utf-8')
     window.preview.webContents.postMessage('viewDocText', doc)
   }
 }
