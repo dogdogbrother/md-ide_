@@ -4,51 +4,11 @@ import { observer } from 'mobx-react-lite'
 import { useEffect, useState } from 'react'
 import { MdiLanguageMarkdown, MdiFolderDownload, MdiArrowRightThin } from '../../src/assets/svg'
 import classnames from 'classnames'
+import { useContextMenu, DocInput, DirInput, DirDocInput } from './hook'
 
 function App() {
-  const [isRepeat, setIsRepeat] = useState(false)
-  // 控制展开的文件夹
+  useContextMenu(catalogStore)
   const [unfold, setUnfold] = useState([])
-  useEffect(() => {
-    function handleContextMenu(e) {
-      e.preventDefault()
-      const { localName, innerText, dataset } = e.target
-      // localName 可能是li ul 和 div
-      if (localName === 'ul' || localName === 'div') {
-        return catalogStore.addDoc()
-      }
-      return catalogStore.eidtDoc(innerText || dataset.name)
-    }
-    window.addEventListener('contextmenu', handleContextMenu)
-  }, [])
-  function onDocName(e) {
-    const docsName = catalogStore.menus.filter(menu => menu.type === 'md')
-    setIsRepeat(!!docsName.find(menu => e.target.value === menu.name))
-  }
-  function onDirName(e) {
-    const dirsName = catalogStore.menus.filter(menu => menu.type === 'dir')
-    setIsRepeat(!!dirsName.find(menu => e.target.value === menu.name))
-  }
-  function onCreateDir(e) {
-    // 如果是重复的 通知主程序发送通知  (暂时不实现)
-    if(isRepeat) {
-      catalogStore.setAddDirState(false)
-    } else {
-      catalogStore.setAddDirState(false)
-      catalogStore.addDir(e.target.value)
-    }
-    setIsRepeat(false)
-  }
-  function onCreateDoc(e) {
-    // 如果是重复的 通知主程序发送通知  (暂时不实现)
-    if(isRepeat) {
-      catalogStore.setAddDocState(false)
-    } else {
-      catalogStore.setAddDocState(false)
-      catalogStore.addDoc(e.target.value)
-    }
-    setIsRepeat(false)
-  }
   const onCheck = (docName, menuName) => () => {
     catalogStore.setCurrentMenuName(docName, menuName)
   } 
@@ -68,14 +28,19 @@ function App() {
               'dir',
               {'is-unfold': unfold.includes(mune.name)}
             )}
+            data-dir={mune.name}
             onClick={changeFolder(mune)}
           >
-            <MdiFolderDownload />
-            <span>{mune.name}</span>
-            <MdiArrowRightThin className='arrow' />
+            <MdiFolderDownload data-dir={mune.name} />
+            <span data-dir={mune.name}>{mune.name}</span>
+            {
+              mune.children.length ? <MdiArrowRightThin data-dir={mune.name} className='arrow' /> : null
+            }
           </li>
           {
             mune.children.map(doc => <li 
+              data-dir={mune.name}
+              data-doc={doc.name}
               className={classnames(
                 'dir-md',
                 {'is-unfold': unfold.includes(mune.name)},
@@ -84,9 +49,17 @@ function App() {
               key={doc.name}
               onClick={onCheck(doc.name, mune.name)}
             >
-              <MdiLanguageMarkdown data-name={doc.name}/>
+              <MdiLanguageMarkdown data-name={doc.name} data-dir={mune.name}/>
               {doc.name}
             </li>)
+          }
+          {
+            catalogStore.dirDocState[mune.name]
+            && 
+            <DirDocInput 
+              catalogStore={catalogStore}
+              dir={mune}
+            />
           }
         </div>
       ))}
@@ -105,36 +78,12 @@ function App() {
       {
         catalogStore.addDocState 
         && 
-        <div className='input-wrap'>
-          <input 
-            className={isRepeat ? 'repeat' : ''}
-            autoFocus 
-            type="text" 
-            onInput={onDocName} 
-            onBlur={onCreateDoc}
-            placeholder='请输入文档名' 
-          />
-          {
-            isRepeat && <div className='tip'>文档名字重复啦~</div>
-          }
-        </div>
+        <DocInput catalogStore={catalogStore} />
       }
       {
         catalogStore.addDirState 
         && 
-        <div className='input-wrap'>
-          <input 
-            className={isRepeat ? 'repeat' : ''}
-            autoFocus 
-            type="text" 
-            onInput={onDirName} 
-            onBlur={onCreateDir}
-            placeholder='请输入文件夹名' 
-          />
-          {
-            isRepeat && <div className='tip'>文件夹名字重复啦~</div>
-          }
-        </div>
+        <DirInput catalogStore={catalogStore} />
       }
     </ul>
   </div>

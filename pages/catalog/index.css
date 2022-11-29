@@ -9,7 +9,6 @@ li {
   display: flex;
   align-items: center;
   cursor: pointer;
-  margin-bottom: 5px;
   padding: 7px 10px;
   border-radius: 10px;
   transition: 0.2s;
@@ -18,9 +17,6 @@ li {
 }
 li span {
   flex: 1;
-}
-li:last-child {
-  margin-bottom: 0;
 }
 li:hover {
   background-color: rgba(238, 238, 238, 0.4);
@@ -38,6 +34,7 @@ li svg {
   transform: rotateZ(0deg);
   transform-origin: center center;
   height: 20px;
+  color: #555;
 }
 .dir.is-unfold .arrow {
   transform: rotateZ(90deg);
@@ -51,6 +48,10 @@ li svg {
 .input-wrap {
   margin: 0 10px;
   position: relative;
+}
+.input-wrap.sub {
+  margin-left: 25px;
+  margin-bottom: 10px;
 }
 .input-wrap .tip {
   position: absolute;

@@ -3,6 +3,7 @@ const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
+const { inform } = require('./util/notification')
 
 async function createCatalog(window, md_file) {
   window.catalog = new BrowserView({
@@ -39,49 +40,46 @@ async function createCatalog(window, md_file) {
       dirName
     }))
   })
-  ipcMain.on('addDoc', (e, docName) => {
-    if (docName) {
-      fs.writeFileSync(md_file + '/' + docName + '.md', '# ' + docName)
-      const notification = new Notification({
-        body: '创建文档成功',
-        silent: true,
-        timeoutType: 'default',
-      })
-      notification.show()
-      // 创建成功了 获取全新的给渲染分支
-      getDocAndPostMsg(catalog, md_file)
-    } else {
-      createMenu(e, [
-        {
-          label: "新建markdown文档",
-          click: () => {
-            catalog.webContents.postMessage('addDoc', '')
-          }
-        },
-        {
-          label: "新建目录",
-          click: () => {
-            catalog.webContents.postMessage('addDir', '')
-          }
-        },
-        { type: 'separator' },
-        {
-          label: "打开所在目录",
-          click: () => {
-            shell.openPath(md_file)
-          }
+  
+  ipcMain.on('emptyMenu', (e) => {
+    createMenu(e, [
+      {
+        label: "新建markdown文档",
+        click: () => {
+          catalog.webContents.postMessage('addDoc', '')
         }
-      ])
-    }
+      },
+      {
+        label: "新建目录",
+        click: () => {
+          catalog.webContents.postMessage('addDir', '')
+        }
+      },
+      { type: 'separator' },
+      {
+        label: "打开所在目录",
+        click: () => {
+          shell.openPath(md_file)
+        }
+      }
+    ])
+  })
+  ipcMain.on('addDoc', (e, docName) => {
+    fs.writeFileSync(md_file + '/' + docName + '.md', '# ' + docName)
+    inform('创建文档成功')
+    // 创建成功了 获取全新的给渲染分支
+    getDocAndPostMsg(catalog, md_file)
   })
   ipcMain.on('addDir', (_e, dirName) => {
     fs.mkdirSync(md_file + '/' + dirName)
-    const notification = new Notification({
-      body: '创建文件夹成功',
-      silent: true,
-      timeoutType: 'default',
-    })
-    notification.show()
+    inform('创建文件夹成功')
+    getDocAndPostMsg(catalog, md_file)
+  })
+  ipcMain.on('addDirDoc', (_e, info) => {
+    const { dirName, docName } = JSON.parse(info)
+    fs.writeFileSync(md_file + '/' + dirName + '/' + docName + '.md', '# ' + docName)
+    inform('创建文档成功')
+    // 创建成功了 获取全新的给渲染分支
     getDocAndPostMsg(catalog, md_file)
   })
   ipcMain.on('eidtDoc', async (e, docName) => {
@@ -99,6 +97,7 @@ async function createCatalog(window, md_file) {
             fs.unlinkSync(md_file + '/' + docName + '.md')
             getDocAndPostMsg(catalog, md_file)
             window.edit.webContents.postMessage('isClearView', docName)
+            inform('删除文件夹成功')
           }
         }
       },
@@ -106,6 +105,62 @@ async function createCatalog(window, md_file) {
         label: "打开文件所在目录",
         click: () => {
           shell.openPath(md_file)
+        }
+      }
+    ])
+  })
+  ipcMain.on('createDirMenu', (e, dirName) => {
+    // 如果此文件夹下有文件,禁止删除
+    const files = fs.readdirSync(md_file + '/' + dirName)
+    createMenu(e, [
+      {
+        label: "删除此文件夹",
+        enabled: !files.length,
+        click:  () => {
+          const buttonInteger = dialog.showMessageBoxSync(window.main, {
+            message: `要确认删除${dirName}文件夹吗?`,
+            detail: '删除就恢复不了哦',
+            buttons: ['确认删除', '取消'],
+            cancelId: 1
+          })
+          if (buttonInteger === 0) {
+            fs.rmdirSync(md_file + '/' + dirName)
+            getDocAndPostMsg(catalog, md_file)
+            inform('删除文件夹成功')
+          }
+        }
+      },
+      {
+        label: "新建markdown文档",
+        click:  () => {
+          catalog.webContents.postMessage('addDirDoc', dirName)
+        }
+      }
+    ])
+  })
+  ipcMain.on('createDirDocMenu', (e, info) => {
+    const {dirName, docName} = JSON.parse(info)
+    createMenu(e, [
+      {
+        label: "删除此文档",
+        click: () => {
+          const buttonInteger = dialog.showMessageBoxSync(window.main, {
+            message: `要确认删除${dirName}文档吗?`,
+            detail: '删除就恢复不了哦',
+            buttons: ['确认删除', '取消'],
+            cancelId: 1
+          })
+          if (buttonInteger === 0) {
+            fs.unlinkSync(md_file + '/' + dirName + '/' + docName + '.md')
+            getDocAndPostMsg(catalog, md_file)
+            inform('删除文档成功')
+          }
+        }
+      },
+      {
+        label: "打开文件所在目录",
+        click: () => {
+          shell.openPath(md_file + '/' + dirName)
         }
       }
     ])
