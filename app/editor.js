@@ -14,7 +14,7 @@ function createEditor(window, md_file) {
   })
   const { edit } = window
   setBrowserView(window.main, edit)
-  edit.setBounds({ x: 240, y: 0, width: 1040, height: 900 })
+  edit.setBounds({ x: 240, y: 30, width: 1040, height: 900 })
   edit.setAutoResize({
     width: true,
     height: true,
@@ -22,7 +22,7 @@ function createEditor(window, md_file) {
     useContentSize: true
   })
   loadUrl(edit.webContents, '/pages/edit/index.html')
-  window.edit.webContents.openDevTools()
+  // window.edit.webContents.openDevTools()
   
   ipcMain.on('saveDoc', (_e, docInfo) => {
     const { doc, docName } = JSON.parse(docInfo)

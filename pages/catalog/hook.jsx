@@ -33,14 +33,14 @@ export function DocInput({catalogStore}) {
     catalogStore.setIsRepeat(!!docsName.find(menu => e.target.value === menu.name))
   }
   function onCreateDoc(e) {
+    catalogStore.setIsRepeat(false)
+
+    catalogStore.setAddDocState(false)
+    if (!e.target.value) return
     // 如果是重复的 通知主程序发送通知  (暂时不实现)
-    if(catalogStore.isRepeat) {
-      catalogStore.setAddDocState(false)
-    } else {
-      catalogStore.setAddDocState(false)
+    if(!catalogStore.isRepeat) {
       catalogStore.addDoc(e.target.value)
     }
-    catalogStore.setIsRepeat(false)
   }
   return <div className='input-wrap'>
     <input 
@@ -57,7 +57,7 @@ export function DocInput({catalogStore}) {
   </div>
 }
 
-// 右键开启文件录入根文件
+// 右键开启文件录入根目录
 export function DirInput({catalogStore}) {
   function onDirName(e) {
     const dirsName = catalogStore.menus.filter(menu => menu.type === 'dir')

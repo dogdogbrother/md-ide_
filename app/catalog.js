@@ -16,7 +16,7 @@ async function createCatalog(window, md_file) {
   setBrowserView(window.main, catalog)
   catalog.setBounds({ 
     x: 0, 
-    y: 0, 
+    y: 30, 
     width: 240, 
     height: 900,
     useContentSize: true
@@ -26,7 +26,7 @@ async function createCatalog(window, md_file) {
     vertical: true
   })
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
-  catalog.webContents.openDevTools()
+  // catalog.webContents.openDevTools()
   ipcMain.on('getDocs', () => {
     getDocAndPostMsg(catalog, md_file)
   })

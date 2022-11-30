@@ -2,6 +2,7 @@ const { app, BrowserWindow } = require('electron')
 const { createEditor } = require('./editor')
 const { loadUrl } = require('./util/loadUrl')
 const { createCatalog } = require('./catalog')
+const { createTitle } = require('./title')
 const fs = require('fs')
 
 const windows = {}
@@ -22,10 +23,15 @@ app.on('ready', async () => {
 function createMainWindow(windows, md_file) {
   windows.main = new BrowserWindow({
     width: 1280,
-    height: 900,
+    height: 930,
     useContentSize: true,
     show: false,
     frame: false,
+    titleBarStyle: 'hiddenInset',
+    trafficLightPosition: {
+      x: 20,
+      y: 6
+    },
     webPreferences: { 
       nodeIntegration: true,
       contextIsolation: false
@@ -36,6 +42,7 @@ function createMainWindow(windows, md_file) {
     windows.main.show()
     createCatalog(windows, md_file)
     createEditor(windows, md_file)
+    createTitle(windows)
   })
 }
 module.exports = {

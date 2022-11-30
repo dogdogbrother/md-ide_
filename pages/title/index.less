@@ -1,0 +1,50 @@
+.title-wrap {
+  height: 30px;
+  padding: 5px 20px;
+  font-size: 14px;
+  line-height: 20px;
+  display: flex;
+  justify-content: space-between;
+  background-color: rgba(blue, 0.4);
+  box-sizing: border-box;
+  border-bottom: 1px solid rgba(#999, 0.3);
+  .mac-placeholder {
+    width: 80px;
+  }
+  .menu {
+    flex: 1;
+    display: flex;
+    cursor: pointer;
+    -webkit-app-region: drag;
+    li {
+      color: rgba(#222, 0.7);
+      transition: .2s;
+      -webkit-app-region: no-drag;
+      margin-right: 20px;
+      font-weight: bold;
+      &:last-child {
+        margin-right: 0;
+      }
+      &:hover {
+        color: rgba(#222, 1);
+      }
+    }
+  }
+}
+.icon-box {
+  display: flex;
+  align-items: center;
+  font-size: 16px;
+  > * {
+    margin-right: 10px;
+    color: rgba(#222, 0.6);
+    transition: .2s;
+    cursor: pointer;
+    &:last-child {
+      margin-right: 0;
+    }
+    &:hover {
+      color: rgba(#222, 1);
+    }
+  }
+}

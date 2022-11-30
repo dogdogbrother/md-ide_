@@ -4,7 +4,7 @@
  * @param {*} subWindow 子窗口view
  */
 function setBrowserView(mainWindow, subWindow) {
-  if (mainWindow.getBrowserView()) {
+  if (mainWindow.getBrowserViews().length) {
     mainWindow.addBrowserView(subWindow)
   } else {
     mainWindow.setBrowserView(subWindow)
