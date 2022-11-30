@@ -1,47 +1,44 @@
 .edit-wrap {
   width: 100vw;
-  height: 100vh;
-  position: relative;
-  background-color: rgba(#ccc, 0.2);
+  height: 90vh;
   overflow-y: auto;
+}
+.paper {
+  min-height: 90vh;
+  position: relative;
+  box-sizing: border-box;
 }
 textarea {
   position: absolute;
+  height: 100%;
+  top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-  top: 0;
-  outline: 2px solid transparent;
-  outline-offset: 2px;
-  border: none;
-  z-index: 50;
-  caret-color: #fff;
+  box-sizing: border-box;
+  z-index: 99;
   color: transparent;
-  background: transparent;
-  font-size: 16px !important;
-  padding: 29px 22px 30px 22px;
-  line-height: 24px !important;
-  font-family:'Courier New', Courier, monospace !important;
-}
-pre {
-  display: block;
-  width: 100vw;
-  min-height: 100vh;
-  padding-bottom: 23px !important;
-  margin: 0 !important;
-  padding-top: 22px !important;
-  border-radius: 0 !important;
-  line-height: 24px !important;
-  font-size: 16px !important;
-  border-radius: 0px;
-  box-sizing: border-box !important;
+  background-color: transparent;
+  outline: 0px solid transparent;
+  border: none;
+  caret-color: #000;
+  resize: none;
 }
 code {
-  width: 100vw;
-  box-sizing: border-box;
-  word-break: break-all !important;
-  word-wrap: break-word !important;
+  position: relative;
+  display: block;
+  min-height: 90vh;
+  z-index: 91;
   white-space: pre-wrap !important;
+}
+textarea,code {
+  word-spacing: 2px !important;
+  font-family:'Courier New', Courier, monospace !important;
+  padding: 20px !important;
+  box-sizing: border-box !important;
+  font-size: 20px !important;
+  line-height: 1.4 !important;
+  padding-bottom: 60px !important;
 }
 
 .empty-wrap {

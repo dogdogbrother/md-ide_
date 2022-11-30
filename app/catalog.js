@@ -18,7 +18,7 @@ async function createCatalog(window, md_file) {
     x: 0, 
     y: 28, 
     width: 240, 
-    height: 900 
+    height: 900
   })
   catalog.setAutoResize({
     height: true,

@@ -1,13 +1,14 @@
 import { useRef, useEffect } from 'react'
-import Prism from 'prismjs'
+import './prism.css'
+import './prism.js'
+
 import docStore from '@/store/doc'
 import { observer } from 'mobx-react-lite'
 import { Empty } from '../../src/assets/svg'
-import './index.css'
+import './index.less'
 
 function App() {
   const textareaRef = useRef(null)
-  const codeRef = useRef(null)
   useEffect(() => {
     function handleContextMenu(e) {
       e.preventDefault()
@@ -16,8 +17,8 @@ function App() {
     window.addEventListener('contextmenu', handleContextMenu)
   }, [])
   useEffect(() => {
-    if (codeRef && codeRef.current) {
-      Prism.highlightElement(codeRef.current)
+    if (textareaRef.current) {
+      textareaRef.current.value = docStore.doc
     }
   }, [docStore.doc])
   // 插入内容有值时,插入
@@ -36,7 +37,7 @@ function App() {
   function onEnterKey(e) {
     // ctrl + s 保存当前
     if ((e.metaKey || e.ctrlKey) && e.keyCode === 83) {
-      docStore.saveDoc()
+      docStore.saveDoc()  
       return e.preventDefault()
     }
     const pointStart = e.target.selectionStart
@@ -59,27 +60,25 @@ function App() {
     }
   }
   return (
-    <>
+    <div className='edit-wrap no-scrollbar'>
       {
         docStore.docName
         ?
-        <div className='edit-wrap'>
-          <pre className='no-scrollbar'>
-            <textarea 
-              autoFocus
-              spellCheck="false"
-              className='no-scrollbar'
-              value={docStore.doc || undefined}
-              ref={textareaRef}
-              onInput={onInput}
-              onKeyDown={onEnterKey}
-            />
-            <code ref={codeRef} className="language-markdown line-numbers no-scrollbar">
-              {docStore.doc}
-            </code>
-          </pre>
+        <div className='paper '>
+          <textarea 
+            onInput={onInput} 
+            onKeyDown={onEnterKey}
+            ref={textareaRef}
+            autoFocus
+            spellCheck="false" 
+            className="no-scrollbar"
+          ></textarea>
+          <code 
+            className='language-markdown'
+            dangerouslySetInnerHTML={{ __html: Prism.highlight(docStore.doc || '', Prism.languages.markdown, 'markdown') + '<br />'}}
+          ></code>
         </div>
-        : 
+        :
         <div className='empty-wrap'>
           <div>
             <Empty />
@@ -87,7 +86,8 @@ function App() {
           </div>
         </div>
       }
-    </>
+      
+    </div>
   )
 }
 
