@@ -1,6 +1,5 @@
 const { BrowserView, ipcMain } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
-const path = require('path')
 const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
@@ -15,11 +14,12 @@ function createEditor(window, md_file) {
   })
   const { edit } = window
   setBrowserView(window.main, edit)
-  edit.setBounds({ x: 240, y: 28, width: 1040, height: 900 })
+  edit.setBounds({ x: 240, y: 0, width: 1040, height: 900 })
   edit.setAutoResize({
     width: true,
     height: true,
-    vertical: true
+    vertical: true,
+    useContentSize: true
   })
   loadUrl(edit.webContents, '/pages/edit/index.html')
   window.edit.webContents.openDevTools()

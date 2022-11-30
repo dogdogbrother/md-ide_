@@ -16,9 +16,10 @@ async function createCatalog(window, md_file) {
   setBrowserView(window.main, catalog)
   catalog.setBounds({ 
     x: 0, 
-    y: 28, 
+    y: 0, 
     width: 240, 
-    height: 900
+    height: 900,
+    useContentSize: true
   })
   catalog.setAutoResize({
     height: true,

@@ -23,7 +23,9 @@ function createMainWindow(windows, md_file) {
   windows.main = new BrowserWindow({
     width: 1280,
     height: 900,
+    useContentSize: true,
     show: false,
+    frame: false,
     webPreferences: { 
       nodeIntegration: true,
       contextIsolation: false
