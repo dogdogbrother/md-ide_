@@ -1,7 +1,7 @@
 const { dialog, BrowserWindow } = require('electron')
 const fs = require('fs')
 const { createMainWindow } = require('./main.js')
-const { configPath, setConfig } = require('./util/getAppPath')
+const { configPath, setConfig } = require('./util/appPath')
 /**
  * @description 创建选择项目目录的弹窗
  */

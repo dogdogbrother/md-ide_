@@ -3,7 +3,7 @@ const { createEditor } = require('./editor')
 const { loadUrl } = require('./util/loadUrl')
 const { createCatalog } = require('./catalog')
 const { createTitle } = require('./title')
-const { getConfig } = require('./util/getAppPath')
+const { getConfig } = require('./util/appPath')
 
 const windows = {}
 app.on('ready', () => {

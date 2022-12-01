@@ -2,7 +2,7 @@ const { BrowserView, ipcMain } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
-const { clearConfig } = require('./util/getAppPath')
+const { clearConfig } = require('./util/appPath')
 
 function createTitle(window) {
   window.title = new BrowserView({
@@ -16,7 +16,7 @@ function createTitle(window) {
     width: true,
   })
   window.title.setBounds({ x: 0, y: 0, width: 1280, height: 30 })
-  window.title.webContents.openDevTools()
+  // window.title.webContents.openDevTools()
   loadUrl(window.title.webContents, '/pages/title/index.html')
   ipcMain.on('setting', e => {
     createMenu(e, [

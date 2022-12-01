@@ -14,6 +14,7 @@ class CatalogStore {
     // 因为监听的执行有可能慢于主进程,所以要去主动拉一次
     ipcRenderer.send('getDocs')
     ipcRenderer.on('viewDocs', (_event, menus) => {
+      console.log(menus);
       this.setMenus(JSON.parse(menus))
     })
     // 点击了右键菜单上的 新建文档

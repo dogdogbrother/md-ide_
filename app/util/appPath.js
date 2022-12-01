@@ -17,6 +17,10 @@ function setConfig(md_file_path) {
   const json = {
     md_file: md_file_path
   }
+  // 检查下项目下 有没有docs文件夹,没有的话就创建下
+  if(!fs.existsSync(md_file_path + '/docs')) {
+    fs.mkdirSync(md_file_path + '/docs')
+  }
   fs.writeFileSync(configPath, JSON.stringify(json))
 }
 
