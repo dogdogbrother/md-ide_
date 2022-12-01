@@ -12,7 +12,9 @@ function App() {
   useEffect(() => {
     function handleContextMenu(e) {
       e.preventDefault()
-      docStore.createEditMenu()
+      if (docStore.docName) {
+        docStore.createEditMenu()
+      }
     }
     window.addEventListener('contextmenu', handleContextMenu)
   }, [])
@@ -25,9 +27,16 @@ function App() {
   useEffect(() => {
     if (!docStore.insertValue) return
     const value = textareaRef.current.value || ''
-    const start = textareaRef.current.selectionStart || 0
-    textareaRef.current.value = value.substring(0, start) + docStore.insertValue + value.substring(start)
-    docStore.setDoc(textareaRef.current.value)
+    // 有 --- 代表是插入头部
+    if (docStore.insertValue.includes('---')) {
+      const res = docStore.insertValue + '\n' + value
+      textareaRef.current.value = res
+      docStore.setDoc(res)
+    } else {
+      const start = textareaRef.current.selectionStart || 0
+      textareaRef.current.value = value.substring(0, start) + docStore.insertValue + value.substring(start)
+      docStore.setDoc(textareaRef.current.value)
+    }
     docStore.setInsertValue('')
   }, [docStore.insertValue])
   

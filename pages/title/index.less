@@ -1,15 +1,15 @@
 .title-wrap {
   height: 30px;
-  padding: 5px 20px;
+  padding: 2px 20px;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 26px;
   display: flex;
   justify-content: space-between;
   background-color: rgba(blue, 0.4);
   box-sizing: border-box;
   border-bottom: 1px solid rgba(#999, 0.3);
   .mac-placeholder {
-    width: 80px;
+    width: 70px;
   }
   .menu {
     flex: 1;
@@ -20,13 +20,17 @@
       color: rgba(#222, 0.7);
       transition: .2s;
       -webkit-app-region: no-drag;
-      margin-right: 20px;
+      margin-right: 8px;
       font-weight: bold;
+      padding: 0 10px;
       &:last-child {
         margin-right: 0;
       }
       &:hover {
         color: rgba(#222, 1);
+      }
+      &:active {
+        background-color: rgba(black, 0.06);
       }
     }
   }

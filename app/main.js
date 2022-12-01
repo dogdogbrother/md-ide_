@@ -3,20 +3,17 @@ const { createEditor } = require('./editor')
 const { loadUrl } = require('./util/loadUrl')
 const { createCatalog } = require('./catalog')
 const { createTitle } = require('./title')
-const fs = require('fs')
+const { getConfig } = require('./util/getAppPath')
 
 const windows = {}
-app.on('ready', async () => {
-  const userDataPath = app.getPath('userData') + '/config.json'
-  const isConfigExists = await fs.existsSync(userDataPath)
+app.on('ready', () => {
+  const config = getConfig()
   // 如果没有配置文件,就让用户选择
-  if (isConfigExists) {
-    const configPath = await fs.readFileSync(userDataPath)
-    const md_file = JSON.parse(configPath).md_file
-    createMainWindow(windows, md_file)
+  if (config) {
+    createMainWindow(windows, config.md_file)
   } else {
     const { createProject } = require('./createProject')
-    createProject(app, userDataPath, windows)
+    createProject(app, windows)
   }
 })
 
@@ -43,6 +40,16 @@ function createMainWindow(windows, md_file) {
     createCatalog(windows, md_file)
     createEditor(windows, md_file)
     createTitle(windows)
+  })
+  windows.main.on('closed', () => {
+    windows.main = null
+    // 如果不存在这个文件(退出项目时删除了),就代表此次关闭是 退出当前项目 操作引起的
+    if (!getConfig()) {
+      const { createProject } = require('./createProject')
+      setTimeout(() => {
+        createProject(app, windows)
+      }, 500)
+    }
   })
 }
 module.exports = {

@@ -1,4 +1,4 @@
-const { BrowserView, ipcMain } = require('electron')
+const { BrowserView, ipcMain, dialog } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
@@ -51,6 +51,12 @@ function createEditor(window, md_file) {
           edit.webContents.postMessage('insert', 'css')
         }
       },
+      {
+        label: '插入图片',
+        click() {
+          insertImg(window)
+        }
+      },
       { type: 'separator' },
       {
         label: '预览MarkDown',
@@ -63,6 +69,16 @@ function createEditor(window, md_file) {
   
 }
 
+// 选择图片插入
+function insertImg(windows) {
+  const imgPath = dialog.showOpenDialogSync(windows.title, {
+    properties: ['openFile', 'multiSelections'],
+    filters: { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
+  })
+  if (imgPath) {
+    
+  }
+}
 module.exports = {
   createEditor
 }
