@@ -7,6 +7,7 @@ class DocStore {
   dirName = null
   insertValue = null  // 文档插入的内容
   timer = null
+  imgPath = null  // 每次插入 此值都变,提醒编辑区域
   constructor() {
     makeAutoObservable(this)
     ipcRenderer.on('viewDoc', (_event, docInfo) => {
@@ -41,6 +42,10 @@ tags: ''
 \`\`\``)
       }
     })
+    // 插入图片
+    ipcRenderer.on('insertImg', (_event, imgPath) => {
+      this.setImgPath(imgPath)
+    })
     this.setInterval()
   }
   setDoc(doc) {
@@ -64,12 +69,15 @@ tags: ''
     this.insertValue = value
   }
   setInterval() {
+    console.log(1);
     if (!this.doc || !this.docName) return
     ipcRenderer.send('saveDoc', JSON.stringify({
       doc: this.doc,
       docName: this.docName
     }))
+    console.log(2);
     this.timer = setInterval(() => {
+      console.log(this.doc, this.docName);
       if (!this.doc || !this.docName) return
       ipcRenderer.send('saveDoc', JSON.stringify({
         doc: this.doc,
@@ -79,6 +87,9 @@ tags: ''
   }
   setDirName(dirName) {
     this.dirName = dirName
+  }
+  setImgPath(imgPath) {
+    this.imgPath = imgPath
   }
 }
 

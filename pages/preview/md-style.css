@@ -9,3 +9,6 @@ pre code {
 :not(pre) > code {
   color: blueviolet;
 }
+img {
+  max-width: 100%;
+}

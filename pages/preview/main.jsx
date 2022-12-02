@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '../../src/assets/style/index.css'
-import './index.css'
+import './index.less'
 import './md-style.css'
 import { useState, useEffect } from 'react'
 import matter from 'gray-matter'
@@ -14,11 +14,18 @@ ReactDOM.createRoot(document.getElementById('app')).render(
 )
 function App() {
   const [content, setContent] = useState('')
+  const [appPath, setAppPath] = useState('')
   useEffect(() => {
     ipcRenderer.on('viewDocText', (_event, text) => {
       const { content } = matter(text)
       setContent(content)
     })
+    // 要去获取到本机的绝对路径
+    ipcRenderer.send('getAppPath')
+    ipcRenderer.on('appPath', (_e, text) => {
+      setAppPath(text)
+    })
+    
   }, [])
   function Code({className, children}) {
     if (className) {
@@ -35,7 +42,8 @@ function App() {
   }
   return <div className='paper'>
     <MarkDown
-      children={content}
+      //把 ](/img/ 替换成本机文本的绝对路径
+      children={content.replace(/]\(\/img\//g, `](file://${appPath}/docs/img/`)}
       options={{ 
         forceBlock: true, 
         wrapper: 'article',

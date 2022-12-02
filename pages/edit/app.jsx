@@ -39,7 +39,15 @@ function App() {
     }
     docStore.setInsertValue('')
   }, [docStore.insertValue])
-  
+  useEffect(() => {
+    if (textareaRef.current) {
+      const start = textareaRef.current.selectionStart || 0
+      const value = textareaRef.current.value || ''
+      const insetRes = value.substring(0, start) + `![插图](${docStore.imgPath})` + value.substring(start)
+      textareaRef.current.value = insetRes
+      docStore.setDoc(insetRes)
+    }
+  }, [docStore.imgPath])
   function onInput(e) {
     docStore.setDoc(e.target.value)
   }

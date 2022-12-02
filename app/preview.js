@@ -1,6 +1,7 @@
-const { BrowserWindow, screen } = require('electron')
+const { BrowserWindow, screen, ipcMain } = require('electron')
 const { loadUrl } = require('./util/loadUrl')
 const fs = require('fs')
+const { getConfig } = require('./util/appPath')
 const wathch = {
   fs: null
 }
@@ -38,15 +39,19 @@ function createPreview(window, docName, md_file, dirName) {
     currentWindow.once('ready-to-show', () => {
       currentWindow.show()
       watchFs()
-      // currentWindow.webContents.openDevTools()
+      currentWindow.webContents.openDevTools()
     })
   }
   window.preview.on('close', () => {
     wathch.fs.close()
     window.preview = null
   })
+  ipcMain.once('getAppPath', e => {
+    const { md_file } = getConfig()
+    e.reply('appPath', md_file)
+  })
   function watchFs() {
-    const fullPath = md_file + '/' + (dirName ? dirName + '/' : '') + docName + '.md'
+    const fullPath = md_file + '/docs/' + (dirName ? dirName + '/' : '') + docName + '.md'
     // 这里有重命名的情况 暂时不考虑
     wathch.fs = fs.watch(fullPath, (eventType, filename) => {
       if (eventType === 'rename') {

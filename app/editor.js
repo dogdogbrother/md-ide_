@@ -4,6 +4,7 @@ const fs = require('fs')
 const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
 const { createPreview } = require('./preview')
+const { setDocImg } = require('./util/doc')
 
 function createEditor(window, md_file) {
   window.edit = new BrowserView({
@@ -27,7 +28,7 @@ function createEditor(window, md_file) {
   ipcMain.on('saveDoc', (_e, docInfo) => {
     const { doc, docName } = JSON.parse(docInfo)
     // 通过 docName 找到md文件,重写即可.
-    fs.writeFileSync(md_file + '/' + docName + '.md', doc)
+    fs.writeFileSync(md_file + '/docs/' + docName + '.md', doc)
   })
   // 在编辑器右键创建菜单
   ipcMain.on('createEditMenu', (e, info ) => {
@@ -66,17 +67,17 @@ function createEditor(window, md_file) {
       },
     ])
   })
-  
 }
 
 // 选择图片插入
 function insertImg(windows) {
-  const imgPath = dialog.showOpenDialogSync(windows.title, {
-    properties: ['openFile', 'multiSelections'],
-    filters: { name: 'Images', extensions: ['jpg', 'png', 'gif'] }
+  const imgPath = dialog.showOpenDialogSync(windows.main, {
+    properties: ['openFile'],
+    filters: [{ name: 'Image', extensions: ['jpg', 'png', 'gif'] }]
   })
   if (imgPath) {
-    
+    const resPath = setDocImg(imgPath)
+    windows.edit.webContents.postMessage('insertImg', resPath)
   }
 }
 module.exports = {
