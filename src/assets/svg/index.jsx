@@ -47,3 +47,15 @@ export function MdiMinusBoxOutline(props) {
     <svg width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M19 19V5H5v14h14m0-16a2 2 0 0 1 2 2v14a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h14m-2 8v2H7v-2h10Z"></path></svg>
   )
 }
+
+export function MdiCheckboxBlankOutline(props) {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M19 3H5c-1.11 0-2 .89-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V5a2 2 0 0 0-2-2m0 2v14H5V5h14Z"></path></svg>
+  )
+}
+
+export function MdiCheckboxMultipleBlankOutline(props) {
+  return (
+    <svg width="1em" height="1em" viewBox="0 0 24 24" {...props}><path fill="currentColor" d="M20 16V4H8v12h12m2 0a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V4c0-1.11.89-2 2-2h12a2 2 0 0 1 2 2v12m-6 4v2H4a2 2 0 0 1-2-2V7h2v13h12Z"></path></svg>
+  )
+}

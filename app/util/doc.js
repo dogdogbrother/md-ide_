@@ -51,6 +51,9 @@ function setDocImg(imgPath) {
   const extensions = split[split.length - 1]
   const _img_path = `/img/${v4()}.${extensions}`
   const respath = `${docPath}${_img_path}`
+  if(!fs.existsSync(docPath + '/img')) {
+    fs.mkdirSync(docPath + '/img')
+  }
   fs.copyFileSync(imgPath[0], respath)
   return _img_path
 }

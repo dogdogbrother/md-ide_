@@ -69,15 +69,12 @@ tags: ''
     this.insertValue = value
   }
   setInterval() {
-    console.log(1);
     if (!this.doc || !this.docName) return
     ipcRenderer.send('saveDoc', JSON.stringify({
       doc: this.doc,
       docName: this.docName
     }))
-    console.log(2);
     this.timer = setInterval(() => {
-      console.log(this.doc, this.docName);
       if (!this.doc || !this.docName) return
       ipcRenderer.send('saveDoc', JSON.stringify({
         doc: this.doc,

@@ -39,7 +39,7 @@ function createPreview(window, docName, md_file, dirName) {
     currentWindow.once('ready-to-show', () => {
       currentWindow.show()
       watchFs()
-      currentWindow.webContents.openDevTools()
+      // currentWindow.webContents.openDevTools()
     })
   }
   window.preview.on('close', () => {
