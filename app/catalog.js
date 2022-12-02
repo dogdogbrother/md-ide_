@@ -66,7 +66,9 @@ async function createCatalog(window, md_file) {
     ])
   })
   ipcMain.on('addDoc', (e, docName) => {
-    fs.writeFileSync(md_file + '/docs/' + docName + '.md', '# ' + docName)
+    const regFormat = /.md$/i
+    const fileName = docName.replace(regFormat, '')
+    fs.writeFileSync(md_file + '/docs/' + fileName + '.md', '# ' + fileName)
     inform('创建文档成功')
     // 创建成功了 获取全新的给渲染分支
     getDocAndPostMsg(catalog)
