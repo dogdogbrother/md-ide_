@@ -26,7 +26,7 @@ async function createCatalog(window, md_file) {
     vertical: true
   })
   loadUrl(catalog.webContents, '/pages/catalog/index.html')
-  catalog.webContents.openDevTools()
+  // catalog.webContents.openDevTools()
   ipcMain.on('getDocs', () => {
     getDocAndPostMsg(catalog)
   })
@@ -163,7 +163,7 @@ async function createCatalog(window, md_file) {
       {
         label: "打开文件所在目录",
         click: () => {
-          shell.openPath(md_file + '/' + dirName)
+          shell.openPath(md_file + '/docs/' + dirName)
         }
       }
     ])

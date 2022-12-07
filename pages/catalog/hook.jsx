@@ -12,7 +12,6 @@ export function useContextMenu(catalogStore) {
       }
       // 右键 li 也分3种情况 双击的是文件夹还是md文档,还是文件夹下的md文档
       const { doc, dir } = dataset
-      console.log(doc, dir);
       // 右键文件夹
       if (dir && !doc) {
         return catalogStore.createDirMenu(dir)
