@@ -56,3 +56,9 @@ function App() {
     ></MarkDown>
   </div>
 }
+
+// 获取加强版md 增加 :::tip  内容 ::: 
+function getStrongMd() {
+
+}
+
