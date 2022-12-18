@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import '../../src/assets/style/index.css'
 import './index.less'
-import './md-style.css'
+import './md-style.less'
 import { useState, useEffect } from 'react'
 import matter from 'gray-matter'
 import MarkDown from 'markdown-to-jsx'
@@ -56,3 +56,9 @@ function App() {
     ></MarkDown>
   </div>
 }
+
+// 获取加强版md 增加 :::tip  内容 ::: 
+function getStrongMd() {
+
+}
+

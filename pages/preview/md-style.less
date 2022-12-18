@@ -1,0 +1,73 @@
+pre code {
+  padding: 15px 20px;
+  background-color: black;
+  display: inline-block;
+  color: #fff;
+  font-size: 18px;
+  min-width: 440px;
+  max-width: 100%;
+  box-sizing: border-box;
+  overflow-x: auto;
+}
+:not(pre) > code {
+  color: blueviolet;
+  margin: 0 5px;
+  font-weight: bold;
+  font-size: 1.2em;
+}
+img {
+  max-width: 100%;
+}
+/* table的样式 */
+table {
+  border-collapse: collapse;
+  border: 1px solid rgba(#aaa, 0.6);
+  thead {
+    padding: 15px 0;
+    background-color: rgba(#ccc, 0.6);
+    th {
+      border-right: 1px solid rgba(#aaa, 0.6);
+      padding: 5px 10px;
+      &:last-child {
+        border-right: none;
+      }
+    }
+  }
+}
+tbody {
+  tr {
+    border-bottom: 1px solid rgba(#aaa, 0.6);
+    &:last-child {
+      border-bottom: none;
+    }
+  }
+  td {
+    border-right: 1px solid rgba(#aaa, 0.6);
+    padding: 5px 10px;
+    &:last-child {
+      border-right: none;
+    }
+  }
+}
+li {
+  margin: 5px 0;
+  &:has(ul) {
+    margin-bottom: 15px;
+  }
+}
+
+blockquote {
+  margin: 10px 0;
+  padding: 10px 15px 10px 30px;
+  background-color: rgba(bisque, 0.4);
+  position: relative;
+  &::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    width: 3px;
+    background-color: aquamarine;
+  }
+}

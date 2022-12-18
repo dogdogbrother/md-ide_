@@ -26,9 +26,9 @@ function createEditor(window, md_file) {
   // window.edit.webContents.openDevTools()
   
   ipcMain.on('saveDoc', (_e, docInfo) => {
-    const { doc, docName } = JSON.parse(docInfo)
-    // 通过 docName 找到md文件,重写即可.
-    fs.writeFileSync(md_file + '/docs/' + docName + '.md', doc)
+    const { doc, docName, dirName } = JSON.parse(docInfo)
+    const resPath = `${md_file}/docs/${dirName ? dirName + '/' : ''}${docName}.md`
+    fs.writeFileSync(resPath, doc)
   })
   // 在编辑器右键创建菜单
   ipcMain.on('createEditMenu', (e, info ) => {

@@ -88,6 +88,13 @@ async function createCatalog(window, md_file) {
   ipcMain.on('eidtDoc', async (e, docName) => {
     createMenu(e, [
       {
+        label: "文件重命名",
+        click: () => {
+          // fs.unlinkSync(md_file + '/docs/' + docName + '.md')
+          // fs.renameSync('', '')
+        }
+      },
+      {
         label: "删除此文档",
         click:  () => {
           const buttonInteger = dialog.showMessageBoxSync(window.main, {
@@ -163,7 +170,7 @@ async function createCatalog(window, md_file) {
       {
         label: "打开文件所在目录",
         click: () => {
-          shell.openPath(md_file + '/' + dirName)
+          shell.openPath(md_file + '/docs/' + dirName)
         }
       }
     ])

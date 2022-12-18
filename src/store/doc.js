@@ -27,8 +27,9 @@ class DocStore {
     ipcRenderer.on('insert', (_event, insertType) => {
       if (insertType === 'mate') {
         this.setInsertValue(`---
-title: ''
-tags: ''
+title:
+tags: 
+book: 
 ---`)
       }
       if (insertType === 'js') {
@@ -68,16 +69,19 @@ tags: ''
   setInsertValue(value) {
     this.insertValue = value
   }
-  setInterval() {
-    if (!this.doc || !this.docName) return
-    ipcRenderer.send('saveDoc', JSON.stringify({
-      doc: this.doc,
-      docName: this.docName
-    }))
+  setInterval() { 
+    if (this.doc && this.docName) {
+      ipcRenderer.send('saveDoc', JSON.stringify({
+        doc: this.doc,
+        dirName: this.dirName,
+        docName: this.docName
+      })) 
+    }
     this.timer = setInterval(() => {
       if (!this.doc || !this.docName) return
       ipcRenderer.send('saveDoc', JSON.stringify({
         doc: this.doc,
+        dirName: this.dirName,
         docName: this.docName
       }))
     }, 5000)
