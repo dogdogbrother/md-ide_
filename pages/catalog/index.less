@@ -14,8 +14,15 @@ li {
   transition: 0.2s;
   font-size: 14px;
   background-color: rgba(#eee,  0);
+  svg {
+    flex-shrink: 0;
+  }
   span {
     flex: 1;
+    display: block;
+    text-overflow: ellipsis;
+    overflow: hidden;
+    white-space: nowrap;
   }
   &:last-child {
   }

@@ -50,7 +50,7 @@ function App() {
               onClick={onCheck(doc.name, mune.name)}
             >
               <MdiLanguageMarkdown data-name={doc.name} data-dir={mune.name}/>
-              {doc.name}
+              <span title={doc.name}>{doc.name}</span>
             </li>)
           }
           {
@@ -72,7 +72,7 @@ function App() {
           )}
         >
           <MdiLanguageMarkdown data-name={mune.name}/>
-          {mune.name}
+          <span title={doc.name}>{doc.name}</span>
         </li>
       ))}
       {

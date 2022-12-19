@@ -92,8 +92,9 @@ export function DirDocInput({catalogStore, dir}) {
     setIsRepeat(!!children.find(item => item.name === e.target.value))
   }
   function onCreateDoc(e) {
-    if (!isRepeat) {
-      catalogStore.addDirDoc(dir.name, e.target.value)
+    const { value } = e.target
+    if (!isRepeat && value) {
+      catalogStore.addDirDoc(dir.name, value)
     }
     catalogStore.setDirDocState(dir.name, false)
     setIsRepeat(false)
