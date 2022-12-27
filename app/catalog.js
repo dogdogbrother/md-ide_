@@ -5,6 +5,8 @@ const { setBrowserView } = require('./util/setBrowserView')
 const { createMenu } = require('./util/createMenu')
 const { inform } = require('./util/notification')
 const { getAllDoc } = require('./util/doc')
+const { join } = require('path')
+
 async function createCatalog(window, md_file) {
   window.catalog = new BrowserView({
     webPreferences: { 
@@ -60,7 +62,7 @@ async function createCatalog(window, md_file) {
       {
         label: "打开所在目录",
         click: () => {
-          shell.openPath(md_file + '/docs/')
+          shell.openPath(join(md_file, 'docs'))
         }
       }
     ])

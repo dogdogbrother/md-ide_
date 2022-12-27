@@ -29,6 +29,7 @@ export default defineConfig({
         catalog: path.resolve(__dirname, 'pages/catalog/index.html'),
         preview: path.resolve(__dirname, 'pages/preview/index.html'),
         title: path.resolve(__dirname, 'pages/title/index.html'),
+        formDialog: path.resolve(__dirname, 'pages/formDialog/index.html'),
       }
     }
   }

@@ -1,9 +1,8 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import ReactDOM from 'react-dom/client'
 import '../../src/assets/style/index.css'
 import './index.less'
 import './md-style.less'
-import { useState, useEffect } from 'react'
 import matter from 'gray-matter'
 import MarkDown from 'markdown-to-jsx'
 const { ipcRenderer } = require('electron')
