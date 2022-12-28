@@ -6,6 +6,7 @@ const { createMenu } = require('./util/createMenu')
 const { inform } = require('./util/notification')
 const { getAllDoc } = require('./util/doc')
 const { join } = require('path')
+const { createFormDialog } = require('./formDialog')
 
 async function createCatalog(window, md_file) {
   window.catalog = new BrowserView({
@@ -49,13 +50,14 @@ async function createCatalog(window, md_file) {
       {
         label: "新建markdown文档",
         click: () => {
-          catalog.webContents.postMessage('addDoc', '')
+          createFormDialog(window, 'addRootDoc')
         }
       },
       {
         label: "新建目录",
         click: () => {
-          catalog.webContents.postMessage('addDir', '')
+          createFormDialog(window, 'addDir')
+          // catalog.webContents.postMessage('addDir', '')
         }
       },
       { type: 'separator' },
@@ -67,13 +69,17 @@ async function createCatalog(window, md_file) {
       }
     ])
   })
-  ipcMain.on('addDoc', (e, docName) => {
-    const regFormat = /.md$/i
-    const fileName = docName.replace(regFormat, '')
-    fs.writeFileSync(md_file + '/docs/' + fileName + '.md', '# ' + fileName)
+  ipcMain.on('addDoc', (_, docInfo) => {
+    // 传进来的格式为 {dirName: '', docName: ''}
+    const { dirName, docName } = JSON.parse(docInfo)
+    if (dirName) {
+      fs.writeFileSync(md_file + '/docs/' + dirName + '/' + docName + '.md', '# ' + docName)
+    } else {
+      fs.writeFileSync(md_file + '/docs/' + docName + '.md', '# ' + docName)
+    }
     inform('创建文档成功')
-    // 创建成功了 获取全新的给渲染分支
     getDocAndPostMsg(catalog)
+    window.formDialog.close()
   })
   ipcMain.on('addDir', (_e, dirName) => {
     fs.mkdirSync(md_file + '/docs/' + dirName)

@@ -72,7 +72,7 @@ function App() {
           )}
         >
           <MdiLanguageMarkdown data-name={mune.name}/>
-          <span title={doc.name}>{doc.name}</span>
+          <span title={mune.name}>{mune.name}</span>
         </li>
       ))}
       {
