@@ -53,9 +53,8 @@ class CatalogStore {
   addDirDoc(dirName = '', docName = '') {
     ipcRenderer.send('addDirDoc', JSON.stringify({dirName, docName}))
   }
-  eidtDoc(docName) {
-    // 暂时只提供删除,后续有重命名
-    ipcRenderer.send('eidtDoc', docName)
+  eidtDoc(docInfo) {
+    ipcRenderer.send('eidtDoc', docInfo)
   }
   setAddDocState(state) {
     this.addDocState = state

@@ -57,7 +57,6 @@ async function createCatalog(window, md_file) {
         label: "新建目录",
         click: () => {
           createFormDialog(window, 'addDir')
-          // catalog.webContents.postMessage('addDir', '')
         }
       },
       { type: 'separator' },
@@ -85,7 +84,16 @@ async function createCatalog(window, md_file) {
     fs.mkdirSync(md_file + '/docs/' + dirName)
     inform('创建文件夹成功')
     getDocAndPostMsg(catalog)
+    window.formDialog.close()
   })
+  ipcMain.on('editDirName', (_e, renameInfo) => {
+    const { dirName, preDirName } = JSON.parse(renameInfo)
+    fs.renameSync(md_file + '/docs/' + preDirName, md_file + '/docs/' + dirName)
+    inform('文件夹重命名成功')
+    getDocAndPostMsg(catalog)
+    window.formDialog.close()
+  })
+  
   ipcMain.on('addDirDoc', (_e, info) => {
     const { dirName, docName } = JSON.parse(info)
     fs.writeFileSync(md_file + '/docs/' + dirName + '/' + docName + '.md', '# ' + docName)
@@ -93,13 +101,13 @@ async function createCatalog(window, md_file) {
     // 创建成功了 获取全新的给渲染分支
     getDocAndPostMsg(catalog)
   })
-  ipcMain.on('eidtDoc', async (e, docName) => {
+  ipcMain.on('eidtDoc', async (e, docInfo) => {
+    const { dirName, docName } = JSON.parse(docInfo)
     createMenu(e, [
       {
-        label: "文件重命名",
+        label: "编辑此文档",
         click: () => {
-          // fs.unlinkSync(md_file + '/docs/' + docName + '.md')
-          // fs.renameSync('', '')
+          createFormDialog(window, 'eidtDoc', { dirName, docName })
         }
       },
       {
@@ -134,7 +142,7 @@ async function createCatalog(window, md_file) {
       {
         label: "删除此文件夹",
         enabled: !files.length,
-        click:  () => {
+        click: () => {
           const buttonInteger = dialog.showMessageBoxSync(window.main, {
             message: `要确认删除${dirName}文件夹吗?`,
             detail: '删除就恢复不了哦',
@@ -149,9 +157,20 @@ async function createCatalog(window, md_file) {
         }
       },
       {
+        label: "文件夹重命名",
+        click: () => {
+          createFormDialog(window, 'editDir', {
+            dirName
+          })
+        }
+      },
+      {
         label: "新建markdown文档",
         click:  () => {
-          catalog.webContents.postMessage('addDirDoc', dirName)
+          createFormDialog(window, 'addDirDoc', {
+            dirName
+          })
+          // catalog.webContents.postMessage('addDirDoc', dirName)
         }
       }
     ])

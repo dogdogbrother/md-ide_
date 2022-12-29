@@ -4,16 +4,16 @@ function AddDoc(props) {
   const { menu, validateinfo, close, onFinish, defaultInfo } = props
 
   return <Form 
-    name='addRootDoc'
+    name='addDirDoc'
     labelCol={{ span: 5 }}
     wrapperCol={{ span: 19 }}
     labelAlign="left"
     onFinish={onFinish}
     colon={false}
   >
-    <Form.Item label='目录' name='dirName' initialValue={defaultInfo.dirName || ''}>
+    <Form.Item label='目录' name='dirName' initialValue={defaultInfo.dirName}>
       <Select 
-        defaultValue={defaultInfo.dirName || ''}
+        defaultValue={defaultInfo.dirName}
         options={[
           { value: '', label: '根目录'},
           ...menu
@@ -25,7 +25,6 @@ function AddDoc(props) {
       name='docName' 
       validateStatus={validateinfo.validateStatus} 
       help={validateinfo.help}
-      initialValue={defaultInfo.docName || ''}
     >
       <Input addonAfter=".md"/>
     </Form.Item>

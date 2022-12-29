@@ -19,7 +19,11 @@ export function useContextMenu(catalogStore) {
       if (dir && doc) {
         return catalogStore.createDirDocMenu(dir, doc)
       }
-      return catalogStore.eidtDoc(innerText || dataset.name)
+      const docInfo = {
+        dirName: dir,
+        docName: innerText || dataset.name
+      }
+      return catalogStore.eidtDoc(JSON.stringify(docInfo))
     }
     window.addEventListener('contextmenu', handleContextMenu)
   }, [])
