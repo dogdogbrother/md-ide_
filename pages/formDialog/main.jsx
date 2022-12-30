@@ -27,14 +27,15 @@ function App() {
     }
   }
   const onFinish = (values) => {
-    if (actionType === 'addRootDoc' || actionType === 'addDirDoc') {
-      return addRootDoc(values)
+    const returnValue = { defaultInfo, ...values}
+    if (actionType === 'addRootDoc' || actionType === 'addDirDoc' || actionType === 'editDoc') {
+      return addRootDoc(returnValue)
     }
     if (actionType === 'addDir') {
       return addDir(values)
     }
     if (actionType === 'editDir') {
-      return editDir(values)
+      return editDir(returnValue)
     }
   }
   function addRootDoc(values) {
@@ -140,12 +141,16 @@ function App() {
   return <ConfigProvider theme={theme}>
     <div className='wrap'>
       {/* {
-        (actionType === 'addRootDoc' || actionType === 'eidtDoc') && 
+        (actionType === 'addRootDoc' || actionType === 'editDoc') && 
         <AddDoc menu={menu} defaultInfo={defaultInfo} validateinfo={validateinfo} close={close} onFinish={onFinish} />
       } */}
       {
-        (actionType === 'addDir' || actionType === 'editDir') && <AddDir defaultInfo={defaultInfo} validateinfo={validateinfo} close={close} onFinish={onFinish} />
+        (actionType === 'addRootDoc' || actionType === 'addDirDoc' || actionType === 'editDoc' ) && 
+        <AddDoc menu={menu} defaultInfo={defaultInfo} validateinfo={validateinfo} close={close} onFinish={onFinish} />
       }
+      {/* {
+        (actionType === 'addDir' || actionType === 'editDir') && <AddDir defaultInfo={defaultInfo} validateinfo={validateinfo} close={close} onFinish={onFinish} />
+      } */}
       {/* {
         actionType === 'addDirDoc' && <AddDirDoc menu={menu} defaultInfo={defaultInfo} validateinfo={validateinfo} close={close} onFinish={onFinish} />
       } */}

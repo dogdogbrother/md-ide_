@@ -69,16 +69,28 @@ async function createCatalog(window, md_file) {
     ])
   })
   ipcMain.on('addDoc', (_, docInfo) => {
-    // 传进来的格式为 {dirName: '', docName: ''}
-    const { dirName, docName } = JSON.parse(docInfo)
-    if (dirName) {
-      fs.writeFileSync(md_file + '/docs/' + dirName + '/' + docName + '.md', '# ' + docName)
-    } else {
-      fs.writeFileSync(md_file + '/docs/' + docName + '.md', '# ' + docName)
+    // 传进来的格式为 {dirName: '', docName: '', defaultInfo = { dirName: '', docName: '' }}
+    // 要创建文件,还要编辑文档
+    const { dirName, docName, defaultInfo = {} } = JSON.parse(docInfo)
+    // 代表有原始文档,就是编辑
+    if (defaultInfo.docName) {
+      if (dirName) {
+        fs.renameSync(md_file + '/docs/' + dirName + '/' + defaultInfo.docName + '.md', md_file + '/docs/' + dirName + '/' + docName + '.md')
+      } else {
+        fs.renameSync(md_file + '/docs/' + defaultInfo.docName + '.md', md_file + '/docs/' + docName + '.md')
+      }
+      inform('文件重命名成功')
+      getDocAndPostMsg(catalog)
+      window.formDialog.close()
     }
-    inform('创建文档成功')
-    getDocAndPostMsg(catalog)
-    window.formDialog.close()
+    // if (dirName) {
+    //   fs.writeFileSync(md_file + '/docs/' + dirName + '/' + docName + '.md', '# ' + docName)
+    // } else {
+    //   fs.writeFileSync(md_file + '/docs/' + docName + '.md', '# ' + docName)
+    // }
+    // inform('创建文档成功')
+    // getDocAndPostMsg(catalog)
+    // window.formDialog.close()
   })
   ipcMain.on('addDir', (_e, dirName) => {
     fs.mkdirSync(md_file + '/docs/' + dirName)
@@ -101,13 +113,13 @@ async function createCatalog(window, md_file) {
     // 创建成功了 获取全新的给渲染分支
     getDocAndPostMsg(catalog)
   })
-  ipcMain.on('eidtDoc', async (e, docInfo) => {
+  ipcMain.on('editDoc', async (e, docInfo) => {
     const { dirName, docName } = JSON.parse(docInfo)
     createMenu(e, [
       {
         label: "编辑此文档",
         click: () => {
-          createFormDialog(window, 'eidtDoc', { dirName, docName })
+          createFormDialog(window, 'editDoc', { dirName, docName })
         }
       },
       {

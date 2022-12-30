@@ -4,7 +4,7 @@ import { observer } from 'mobx-react-lite'
 import { useState } from 'react'
 import { MdiLanguageMarkdown, MdiFolderDownload, MdiArrowRightThin } from '../../src/assets/svg'
 import classnames from 'classnames'
-import { useContextMenu, DocInput, DirInput, DirDocInput } from './hook'
+import { useContextMenu } from './hook'
 
 function App() {
   useContextMenu(catalogStore)
@@ -49,42 +49,25 @@ function App() {
               key={doc.name}
               onClick={onCheck(doc.name, mune.name)}
             >
-              <MdiLanguageMarkdown data-name={doc.name} data-dir={mune.name}/>
-              <span title={doc.name}>{doc.name}</span>
+              <MdiLanguageMarkdown data-doc={doc.name} data-dir={mune.name}/>
+              <span data-doc={doc.name} data-dir={mune.name} title={doc.name}>{doc.name}</span>
             </li>)
-          }
-          {
-            catalogStore.dirDocState[mune.name]
-            && 
-            <DirDocInput 
-              catalogStore={catalogStore}
-              dir={mune}
-            />
           }
         </div>
       ))}
       {catalogStore.menus.filter(menu => menu.type !== 'dir').map(mune => (
         <li 
+          data-doc={mune.name}
           key={mune.name} 
           onClick={onCheck(mune.name)}
           className={classnames(
             {'active': catalogStore.currentMenuName === mune.name && !catalogStore.currentDirName}
           )}
         >
-          <MdiLanguageMarkdown data-name={mune.name}/>
-          <span title={mune.name}>{mune.name}</span>
+          <MdiLanguageMarkdown data-doc={mune.name}/>
+          <span data-doc={mune.name} title={mune.name}>{mune.name}</span>
         </li>
       ))}
-      {
-        catalogStore.addDocState 
-        && 
-        <DocInput catalogStore={catalogStore} />
-      }
-      {
-        catalogStore.addDirState 
-        && 
-        <DirInput catalogStore={catalogStore} />
-      }
     </ul>
   </div>
 }

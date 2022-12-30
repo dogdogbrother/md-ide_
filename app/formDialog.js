@@ -6,14 +6,14 @@ const { getAllDoc } = require('./util/doc')
 function createFormDialog(window, action, info = {}) {
   /**
    * @description action 有 (新建根文件 addRootDoc 高度180) (新建文件夹 addDir 150) (文件夹下新建文档 addDirDoc 180) 
-   *              (编辑文件夹名称 editDir 125) (编辑文件名称 eidtDoc 150) 
+   *              (编辑文件夹名称 editDir 125) (编辑文件名称 editDoc 150) 
    */
   const actionHeight = {
     'addRootDoc': 180,
     'addDir': 125,
     'addDirDoc': 180,
     'editDir': 125,
-    'eidtDoc': 150
+    'editDoc': 150
   }
   window.formDialog = new BrowserWindow({
     parent: window.main,

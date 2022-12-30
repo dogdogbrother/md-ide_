@@ -2,7 +2,6 @@ import { Button, Form, Input, Select } from 'antd'
 
 function AddDoc(props) {
   const { menu, validateinfo, close, onFinish, defaultInfo } = props
-
   return <Form 
     name='addRootDoc'
     labelCol={{ span: 5 }}
